@@ -35,8 +35,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-import SideMenu from '@/components/SideMenu/SideMenu.vue'
-import Split from '@/components/Split/Split.vue'
+import SideMenu from '@/components/sideMenu/sideMenu.vue'
+import Split from '@/components/split/split.vue'
 
 export default defineComponent({
   components: {

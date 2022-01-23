@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import SideMenuItem from './SideMenuItem.vue'
+import SideMenuItem from './sideMenuItem.vue'
 import routers from '@/router/music'
 @Options({
   components: {

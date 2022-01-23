@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import Layout from '../views/Layout.vue'
+import Layout from '../views/layout.vue'
 
 import music from './music'
 

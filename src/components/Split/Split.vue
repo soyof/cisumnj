@@ -32,7 +32,7 @@
 <script>
 import { oneOf } from '@/utils/utils'
 import { on, off } from '@/utils/dom'
-import Trigger from './Trigger.vue'
+import Trigger from './trigger.vue'
 export default {
   name: 'Split',
   components: {

@@ -53,9 +53,9 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import SingerType from '@/components/music/SingerType.vue'
+import SingerType from '@/components/music/singerType.vue'
 // @ts-ignore
-import SingerItem from '@/components/music/SingerItem.vue'
+import SingerItem from '@/components/music/singerItem.vue'
 
 import tableMixins from '@/mixins/table'
 import { letterInfo } from '@/dic'

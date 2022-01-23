@@ -36,7 +36,7 @@ export const getValueType = (val: any) => {
   * 6.HH:MM:SS
   * @Date: 2021-12-08 13:37:33
   */
-export const formatDate = (val: string | number, type?: string): string => {
+export const formatDate = (val: string | number | Date, type?: string): string => {
   val = val ? val + '' : '' // 确保val为string类型
   type = type ? type.toLocaleLowerCase() : ''
   if (val && val.length === 8 && getValueType(+val) === 'number' && !isNaN(+val)) {
@@ -73,28 +73,19 @@ export const formatDate = (val: string | number, type?: string): string => {
       return `${year}/${month}/${day} ${hours}:${minutes}:${second}`
     case 'hh:mm:ss':
       return `${hours}:${minutes}:${second}`
+    case 'yyyy-mm':
+      return `${year}-${month}`
+    case 'yyyymm':
+      return `${year}${month}`
+    case 'yyyy':
+      return `${year}`
+    case 'mm':
+      return `${month}`
+    case 'dd':
+      return `${day}`
     default:
       return `${year}-${month}-${day} ${hours}:${minutes}:${second}`
   }
-  // if (type === 'yyyymmdd') {
-  //   return `${year}${month}${day}`
-  // }
-  // if (type === 'yyyy-mm-dd') {
-  //   return `${year}-${month}-${day}`
-  // }
-  // if (type === 'yyyy/mm/dd') {
-  //   return `${year}/${month}/${day}`
-  // }
-  // if (type === 'yyyy-mm-dd hh:mm:ss') {
-  //   return `${year}-${month}-${day} ${hours}:${minutes}:${second}`
-  // }
-  // if (type === 'yyyy/MM/dd HH:MM:SS') {
-  //   return `${year}/${month}/${day} ${hours}:${minutes}:${second}`
-  // }
-  // if (type === 'hh:mm:ss') {
-  //   return `${year}-${month}-${day} ${hours}:${minutes}:${second}`
-  // }
-  // return `${year}-${month}-${day}`
 }
 
 // /**

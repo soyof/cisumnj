@@ -93,7 +93,7 @@ class Services {
       if (response.request.responseType === 'blob') {
         return response
       }
-      if (data.code === 200) {
+      if (data.code === 200 || data.code === 0) {
         return data
       } else if (data.error === 0) {
         return data
