@@ -61,6 +61,8 @@ export const formatDate = (val: string | number | Date, type?: string): string =
   second = second >= 10 ? second : `0${second}`
 
   switch (type) {
+    case 'yyyy%mm%dd':
+      return `${year}年${month}月${day}日`
     case 'yyyymmdd':
       return `${year}${month}${day}`
     case 'yyyy-mm-dd':

@@ -94,11 +94,16 @@
         </template>
       </el-calendar>
     </div>
+    <div class="cur-date-box">
+      <CurrentDate />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch, computed } from 'vue'
+import CurrentDate from '@/components/currentDate.vue'
+
 import http from '@/plugins/axios'
 import { formatDate } from '@/utils/utils'
 
@@ -163,13 +168,12 @@ const getCurMonthInfo = async() => {
 // 获取当前选中日期信息
 const getDateInfo = async() => {
   const newYM = +formatDate(curDate.value, 'yyyyMMdd')
-  const curItemIds = monthInfo.value.findIndex((item: any) => item.date === newYM)
-  const curItem = monthInfo.value.find((item: any) => item.date === newYM)
+  const curItemIds: number = monthInfo.value.findIndex((item: any) => item.date === newYM)
+  const curItem: any = monthInfo.value.find((item: any) => item.date === newYM)
   if (curItemIds >= 0) {
     curDateInfo.value = {
       ...curItem
     }
-    console.log(curDateInfo.value)
   } else {
     const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
       cn: '1',
