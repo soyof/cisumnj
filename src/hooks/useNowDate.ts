@@ -1,4 +1,4 @@
-import { ref, onBeforeUnmount } from 'vue'
+import { ref, onBeforeUnmount, computed } from 'vue'
 import http from '@/plugins/axios'
 import { formatDate } from '@/utils/utils'
 
@@ -26,7 +26,7 @@ export const useNowDate = () => {
   const curHour = ref(formatDate(new Date(), 'hours'))
   const curMinutes = ref(formatDate(new Date(), 'minutes'))
   const curSecond = ref(formatDate(new Date(), 'second'))
-  const curDateInfo = ref(null)
+  const curDateInfo: any = ref({})
 
   const updateCurTimes = () => {
     const { year, month, day, hour, minutes } = getNowTimes()
@@ -78,6 +78,20 @@ export const useNowDate = () => {
 
   getDateInfo()
 
+  const isShowHolidayName = computed(() => {
+    return () => {
+      const { holiday_or, holiday, holiday_today } = curDateInfo.value
+      return holiday_or && holiday && holiday_today && (holiday_or !== 10 && holiday !== holiday_or) || holiday_today === 1
+    }
+  })
+
+  const isDateInfoExist = computed(() => {
+    const keyArr = Object.keys(curDateInfo.value) || []
+    return keyArr && keyArr.length > 0
+  })
+
+  console.log(isDateInfoExist.value)
+
   return {
     curDateInfo,
     curYear,
@@ -85,6 +99,8 @@ export const useNowDate = () => {
     curDay,
     curHour,
     curMinutes,
-    curSecond
+    curSecond,
+    isShowHolidayName,
+    isDateInfoExist
   }
 }
