@@ -4,43 +4,44 @@
       <el-calendar ref="calendar" v-model="curDate" class="pages-el-calendar">
         <template #header="{ date }">
           <div class="calendar-header-date">
-            日期： <i class="calendar-header-date-txt">{{ curDateInfo.date_cn || date }}</i>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span v-if="curDateInfo.lunar_date_cn">
-              农历： <i class="calendar-header-date-txt">{{ curDateInfo.lunar_date_cn || '--' }}</i>
-            </span>
-            <span>
-              <span class="ml10">{{ curDateInfo.yearweek_cn }}</span>
-              <span v-if="curDateInfo.yearday" class="ml10">第{{ curDateInfo.yearday }}天</span>
-            </span>
-            <!-- 节日 -->
-            <el-tag
-              v-if="isShowHolidayName(curDateInfo)"
-              size="small"
-              class="tag-item ml10"
-              effect="dark"
-              type=""
-            >
-              {{ curDateInfo.holiday_or_cn }}
-            </el-tag>
-            <!-- 是否工作日 -->
-            <el-tag
-              v-if="curDateInfo.workday_cn"
-              size="small"
-              class="tag-item"
-              :type="curDateInfo.workday === 1 ? 'danger' : ''"
-            >
-              {{ curDateInfo.workday_cn || '工作日' }}
-            </el-tag>
-            <el-button
-              v-if="curDateInfo.holiday_recess && curDateInfo.holiday_recess !== 2"
-              class="holiday-content-btn ml10"
-              size="small"
-              type="primary"
-              circle
-            >
-              假
-            </el-button>
+            日期： <i class="calendar-header-date-txt mr10">{{ curDateInfo.date_cn || date }}</i>
+            <template v-if="!isCurDay">
+              <span v-if="curDateInfo.lunar_date_cn" class="fz16">
+                农历： <i class="calendar-header-date-txt">{{ curDateInfo.lunar_date_cn || '--' }}</i>
+              </span>
+              <span>
+                <span class="ml10">{{ curDateInfo.yearweek_cn }}</span>
+                <span v-if="curDateInfo.yearday" class="ml10">第{{ curDateInfo.yearday }}天</span>
+              </span>
+              <!-- 节日 -->
+              <el-tag
+                v-if="isShowHolidayName(curDateInfo)"
+                size="small"
+                class="tag-item ml10"
+                effect="dark"
+                type=""
+              >
+                {{ curDateInfo.holiday_or_cn }}
+              </el-tag>
+              <!-- 是否工作日 -->
+              <el-tag
+                v-if="curDateInfo.workday_cn"
+                size="small"
+                class="tag-item"
+                :type="curDateInfo.workday === 1 ? 'danger' : ''"
+              >
+                {{ curDateInfo.workday_cn || '工作日' }}
+              </el-tag>
+              <el-button
+                v-if="curDateInfo.holiday_recess && curDateInfo.holiday_recess !== 2"
+                class="holiday-content-btn ml10"
+                size="small"
+                type="primary"
+                circle
+              >
+                假
+              </el-button>
+            </template>
           </div>
           <el-button-group>
             <el-button size="small" @click="selectDate('prev-year')">
@@ -147,6 +148,12 @@ const isShowHolidayName = computed(() => {
     const { holiday_or, holiday, holiday_today } = dateInfo
     return holiday_or && holiday && holiday_today && (holiday_or !== 10 && holiday !== holiday_or) || holiday_today === 1
   }
+})
+
+const isCurDay = computed(() => {
+  const curDay = formatDate(nowDate, 'dd')
+  const curChooseDay = formatDate(curDate.value, 'dd')
+  return curDay === curChooseDay
 })
 
 // 获取当前月份相关信息

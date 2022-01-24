@@ -85,6 +85,12 @@ export const formatDate = (val: string | number | Date, type?: string): string =
       return `${month}`
     case 'dd':
       return `${day}`
+    case 'hours':
+      return `${hours}`
+    case 'minutes':
+      return `${minutes}`
+    case 'second':
+      return `${second}`
     default:
       return `${year}-${month}-${day} ${hours}:${minutes}:${second}`
   }

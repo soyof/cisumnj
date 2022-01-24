@@ -1,60 +1,51 @@
 <template>
   <div class="current-date">
-    <div class="date-box">
-      <div class="y-m-d mr15">
-        {{ curDate }}
-      </div>
+    <div class="times-box">
       <div class="h-m-s">
-        {{ curTime }}
+        <div class="hours mr10">
+          {{ curHour }}
+        </div>
+        <div class="colon mr10">
+          :
+        </div>
+        <div class="minutes mr10">
+          {{ curMinutes }}
+        </div>
+        <div class="second">
+          {{ curSecond }}
+        </div>
       </div>
     </div>
     <div class="other-info">
+      <div class="week-box other-info-item">
+        {{ curDateInfo?.week_cn }}
+      </div>
+      <div class="date-box other-info-item">
+        {{ `${curYear}年${curMonth}月${curDay}日` }}
+      </div>
+      <div class="lunar-calendar-box other-info-item">
+        {{ curDateInfo?.lunar_date_cn }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref, onBeforeUnmount } from 'vue'
-import http from '@/plugins/axios'
+import { defineComponent } from 'vue'
+import { useNowDate } from '@/hooks/useNowDate'
 
-import { formatDate } from '@/utils/utils'
 export default defineComponent({
   setup(props, context) {
-    const date = new Date()
-    const curDate = ref(formatDate(date, 'yyyy%mm%dd'))
-    const curTime = ref(formatDate(date, 'hh:mm:ss'))
-    const curDateInfo = ref(null)
-
-    const updateCurTimes = () => {
-      if (curDate.value !== formatDate(new Date(), 'yyyy%mm%dd')) {
-        curDate.value = formatDate(new Date(), 'yyyy%mm%dd')
-      }
-      curTime.value = formatDate(new Date(), 'hh:mm:ss')
-    }
-    updateCurTimes()
-
-    const timer = setInterval(() => {
-      updateCurTimes()
-    }, 1000)
-    onBeforeUnmount(() => {
-      clearInterval(timer)
-    })
-
-    // 获取当前选中日期信息
-    const getDateInfo = async() => {
-      const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
-        cn: '1',
-        size: '31',
-        date: formatDate(date, 'yyyymmdd')
-      })
-      curDateInfo.value = result.data.list[0]
-    }
-
-    getDateInfo()
+    const { curDateInfo, curYear, curMonth, curDay, curHour, curMinutes, curSecond } = useNowDate()
 
     return {
-      curDate,
-      curTime
+      curDateInfo,
+      curYear,
+      curMonth,
+      curDay,
+      curHour,
+      curMinutes,
+      curSecond
     }
   },
   data() {
@@ -66,22 +57,66 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .current-date {
+  display: flex;
+  align-items: center;
   user-select: none;
-  .center();
+  width: 80%;
+  height: 120px;
+  padding: 0 30px;
+  margin: 0 auto;
+  border-radius: 30px;
+  background-image: linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%);
 
-  .date-box {
+  .times-box {
     display: flex;
     flex-direction: column;
     align-items: center;
 
-    .y-m-d, .h-m-s {
-      line-height: 28px;
-      font-size: 20px;
-      font-weight: 600;
+    .h-m-s {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .hours, .minutes, .colon {
+        font-size: 55px;
+        color: #fff;
+      }
+
+      .colon {
+        position: relative;
+        top: -5px;
+      }
+
+      .second {
+        font-size: 28px;
+        align-self: flex-end;
+        color: #fff;
+      }
     }
     .h-m-s {
       padding-top: 5px;
     }
   }
+
+  .other-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 30px;
+
+    .other-info-item {
+      padding: 3px 0;
+      color: #fff;
+    }
+
+    .week-box {
+      font-size: 20px;
+    }
+
+    .date-box {}
+
+    .lunar-calendar {}
+  }
+
 }
 </style>
