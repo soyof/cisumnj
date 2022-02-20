@@ -12,6 +12,15 @@ export default [
     component: () => import(/* webpackChunkName: "SingerList" */ '@/views/music/singerList.vue')
   },
   {
+    path: 'singer/:singerId',
+    title: '歌手详情',
+    meta: {
+      hidden: true
+    },
+    name: 'singerDetail',
+    component: () => import(/* webpackChunkName: "SingerList" */ '@/views/music/singerDetail.vue')
+  },
+  {
     path: 'songSheet',
     title: '歌单',
     name: 'songSheet',

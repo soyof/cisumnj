@@ -51,6 +51,7 @@ export default defineComponent({
   font-weight: 700;
   background-color: #ecf5ff;
   user-select: none;
+  box-sizing: border-box;
   -webkit-user-select: none;
 
   &.is-no-bgc {

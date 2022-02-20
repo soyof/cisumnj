@@ -37,13 +37,22 @@
                 v-for="item in singerList"
                 :key="`${item.id}-singer-list`"
                 :info="item"
+                @detail="handleSingerDetail"
               />
-              <el-tag class="more">
-                查看更多
-              </el-tag>
+              <i
+                v-for="(item, ids) in Array(singerList.length - 2)"
+                :key="`singer-list-placeholder-${ids}`"
+                class="singer-list-placeholder"
+              ></i>
             </div>
+            <el-tag
+              v-if="isMore"
+              class="more"
+              @click="getMore"
+            >
+              查看更多
+            </el-tag>
           </el-scrollbar>
-
           <SelfEmpty v-else :showTitle="false" />
         </div>
       </div>
@@ -59,6 +68,8 @@ import SingerItem from '@/components/music/singerItem.vue'
 
 import tableMixins from '@/mixins/table'
 import { letterInfo } from '@/dic'
+
+import * as _ from 'lodash'
 
 @Options({
   components: {
@@ -78,10 +89,13 @@ import { letterInfo } from '@/dic'
       ],
       singerList: [],
       pageIndex: 0,
-      limit: 30,
+      limit: 80,
       isMore: true,
-      singerContentHeight: '100%'
+      singerContentHeight: 'calc(100vh - 150px)'
     }
+  },
+  created() {
+    this.getMoreThrottle = _.throttle(this.getSingerListForMore, 2000)
   },
   mounted() {
     this.$nextTick(() => {
@@ -91,9 +105,6 @@ import { letterInfo } from '@/dic'
   },
   methods: {
     getSingerList(pageIndex: Number) {
-      // if (pageIndex === 0) {
-      //   this.singerList = []
-      // }
       const arr = this.areaAndType.split(',')
       const params = {
         limit: this.limit,
@@ -106,9 +117,30 @@ import { letterInfo } from '@/dic'
         this.singerList = res.artists || []
         this.isMore = res.more
         this.$nextTick(() => {
-          this.$refs['singerBoxScrollbar'] && this.$refs['singerBoxScrollbar'].update()
+          this.resizeEvent()
         })
       })
+    },
+    getSingerListForMore() {
+      const arr = this.areaAndType.split(',')
+      this.pageIndex = this.pageIndex + 1
+      const offset = this.pageIndex * this.limit
+      const params = {
+        limit: this.limit,
+        offset: offset,
+        type: arr[1] || '-1',
+        area: arr[0] || '-1',
+        initial: this.initial
+      }
+
+      this.$http.get('/api/artist/list', params).then((res: any) => {
+        const list = res.artists || []
+        this.singerList = [...this.singerList, ...list]
+        this.isMore = res.more
+      })
+    },
+    getMore() {
+      this.getMoreThrottle()
     },
     handleChooseLetter(val: String) {
       this.initial = val
@@ -117,12 +149,15 @@ import { letterInfo } from '@/dic'
     handleAreaAndTypeChange() {
       this.getSingerList(1)
     },
+    handleSingerDetail(info: any) {
+      this.$router.push(`/epoch/singer/${info.id}`)
+    },
     resizeEvent() {
       if (this.$refs['singerBox'] && this.$refs['singerHeader']) {
         const boxHeight = this.$refs['singerBox'].clientHeight
         const headerHeight = this.$refs['singerHeader'].clientHeight
         const contentHeight = boxHeight - headerHeight
-        this.singerContentHeight = contentHeight
+        this.singerContentHeight = contentHeight <= 200 ? 200 : contentHeight
         this.$refs['singerBoxScrollbar'] && this.$refs['singerBoxScrollbar'].update()
       }
     },
@@ -164,6 +199,7 @@ export default class SingerList extends Vue {}
     }
 
     &-content {
+      width: 100%;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -192,24 +228,48 @@ export default class SingerList extends Vue {}
         }
       }
       &-singer {
+        width: 100%;
         flex: 1;
 
+        :deep(.el-scrollbar__view) {
+          width: 100%;
+          padding-bottom: 20px;
+        }
+
         .singer-list-box {
-          // display: flex;
-          // flex-wrap: wrap;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          width: 100%;
           height: 100%;
           padding-bottom: 15px;
           box-sizing: border-box;
-          .more {
-            width: 100%;
-            height: 30px;
-            padding: 0 10px;
-            margin: 0 20px;
-            border-radius: 6px;
-            box-sizing: border-box;
-            cursor: pointer;
-            .center();
+          // margin: 0 1%;
+
+          // &:after {
+          //   content: '';
+          //   flex: 1;
+          // }
+
+          .singer-item {
+            width: 150px;
+            overflow: hidden;
           }
+
+          > i.singer-list-placeholder {
+            width: 150px;
+          }
+        }
+
+        .more {
+          width: calc(100% - 40px);
+          height: 30px;
+          padding: 0 10px;
+          margin: 0 20px;
+          border-radius: 6px;
+          box-sizing: border-box;
+          cursor: pointer;
+          .center();
         }
 
         .self-empty {

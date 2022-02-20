@@ -22,20 +22,30 @@ import routers from '@/router/music'
   },
   data() {
     return {
-      routers,
+      routers: [],
       routePrefix: '/epoch',
       defaultActive: ''
     }
   },
   created() {
     this.defaultActive = this.$route.path
+    this.routers = this.handleFilterHiddenMenu(routers)
   },
   mounted() {
   },
   methods: {
     handleOpen() {
     },
-    handleClose() {}
+    handleClose() {},
+    handleFilterHiddenMenu(routers: any) {
+      const list = routers.filter((item: any) => {
+        if (item.children && item.children.length > 0 && (!item.meta || !item.meta.hidden)) {
+          return this.handleFilterHiddenMenu(item.children)
+        }
+        return !item.meta || !item.meta.hidden
+      })
+      return list
+    }
   }
 })
 export default class SideMenu extends Vue {}

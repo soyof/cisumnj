@@ -63,15 +63,7 @@ import { ValueLabelInterface } from '@/interface'
       }
     }
   },
-  created() {
-    this.getSingerTypeList()
-  },
   methods: {
-    getSingerTypeList() {
-      this.$http.get('/api/artist/list?type=-1&area=-1').then((res: any) => {
-        console.log(res)
-      })
-    },
     handleClickType(area: ValueLabelInterface, type: ValueLabelInterface) {
       const areaVal = area.value
       const typeVal = type.value
