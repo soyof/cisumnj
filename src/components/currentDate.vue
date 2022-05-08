@@ -41,8 +41,8 @@
         <el-tag
           v-if="isShowHolidayName(curDateInfo)"
           size="small"
-          class="mb10"
-          effect="dark ellipsis"
+          class="mb10 ellipsis"
+          effect="dark"
         >
           {{ curDateInfo.holiday_or_cn }}
         </el-tag>
@@ -118,6 +118,7 @@ export default defineComponent({
   border-radius: 30px;
   background-image: linear-gradient(-225deg, #5D9FFF 0%, #B8DCFF 48%, #6BBBFF 100%);
   overflow: hidden;
+  animation: bgcLg 30s linear infinite forwards;
 
   &.no-date-info {
     width: 300px;

@@ -1,15 +1,16 @@
 <template>
   <div class="song-list">
-    <!-- <HeaderLine class="song-list-top-header" title="热门50首" /> -->
     <el-table :data="songList" style="width: 100%" size="small">
       <el-table-column type="index" label="#" width="100" />
       <el-table-column prop="name" label="歌曲名" />
       <el-table-column v-if="isTop" prop="pubTimes" label="发布时间" />
+      <el-table-column v-if="!isTop" prop="alName" label="专辑" />
     </el-table>
-    <!-- <HeaderLine class="song-list-header" title="全部歌曲" /> -->
     <SimplePagination
       v-if="!isTop"
       :pages="pages"
+      :loading="loading"
+      @change="getSingerSongList"
     />
   </div>
 </template>
@@ -33,24 +34,34 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: true
+  },
+  isPagination: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
+
+const loading = ref(false)
 
 const songList = ref([])
 
 const pages = reactive({
   pageIndex: 0,
-  limit: 50
+  limit: 50,
+  isMore: true
 })
 
 const getSingerSongList = () => {
+  loading.value = true
   let url = `${props.url}?id=${props.singerId}`
 
   if (!props.isTop) {
     url = `${url}&order=hot&limit=${pages.limit}&offset=${pages.pageIndex * pages.limit}`
   }
   service.get(url).then((res: any) => {
-    songList.value = res.songs.map((item: any) => {
+    pages.isMore = !!res.more
+    const data = res.songs.map((item: any) => {
       if (item.publishTime) {
         return {
           ...item,
@@ -59,17 +70,24 @@ const getSingerSongList = () => {
       }
       return {
         ...item,
+        alName: item.al ? item.al.name : '--',
         pubTimes: '--'
       }
     })
+
+    if (props.isPagination) {
+      songList.value = songList.value.concat(data)
+    } else {
+      songList.value = data
+    }
+  }).finally(() => {
+    loading.value = false
   })
 }
 
 onMounted(() => {
   getSingerSongList()
 })
-
-console.log(props, pages)
 </script>
 
 <style lang="less" scoped>
@@ -84,6 +102,10 @@ console.log(props, pages)
     :deep(.el-table__cell) {
       padding: 5px 0;
     }
+  }
+
+  .simple-pagination {
+    margin-top: 15px;
   }
 }
 </style>

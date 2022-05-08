@@ -32,35 +32,37 @@
           {{ singerInfo.description }}
         </el-tag>
       </div>
-      <HeaderLine class="singer-desc-header" title="个人简述" />
-      <p class="singer-desc">
-        {{ singerInfo.briefDesc }}
-      </p>
+      <template v-if="curTab !== 'desc'">
+        <HeaderLine class="singer-desc-header" title="个人简述" />
+        <p class="singer-desc">
+          {{ singerInfo.briefDesc }}
+        </p>
+      </template>
     </div>
     <div class="singer-detail-content">
       <el-tabs v-model="curTab" @tab-click="handleTabClick">
-        <el-tab-pane label="top50" name="first">
-          <SongList
+        <el-tab-pane
+          v-for="(tab, ids) in tabList"
+          :key="`${tab.name}-${ids}`"
+          :label="tab.label"
+          :name="tab.name"
+        >
+          <component
+            :is="tab.component"
+            v-if="tab.name === 'top'"
             url="/api/artist/top/song"
             :singerId="singerId"
             :isTop="true"
           />
-        </el-tab-pane>
-        <el-tab-pane label="全部歌曲" name="second">
-          <SongList
+          <component
+            :is="tab.component"
+            v-else-if="tab.name === 'allSong'"
             url="/api/artist/songs"
             :singerId="singerId"
             :isTop="false"
+            :isPagination="true"
           />
-        </el-tab-pane>
-        <el-tab-pane label="专辑" name="third">
-          专辑
-        </el-tab-pane>
-        <el-tab-pane label="MV" name="fourth">
-          MV
-        </el-tab-pane>
-        <el-tab-pane label="介绍" name="fifth">
-          介绍
+          <component :is="tab.component" v-else :singerId="singerId" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -69,17 +71,38 @@
 
 <script lang='ts' setup>
 // import { Picture as IconPicture } from '@element-plus/icons-vue'
-// @ts-ignore
 import SongList from '@/components/music/songList.vue'
-import { ref, getCurrentInstance } from 'vue'
+import AlbumList from '@/components/music/albumList.vue'
+import MvListVue from '@/components/music/mvList.vue'
+import SingerDtl from '@/components/music/singerDtl.vue'
+
+import { SingerDetailInterface } from '@/interface'
+
+import { ref, getCurrentInstance, Ref } from 'vue'
 import Api from '@/plugins/axios'
 const service = Api.service
 const { ctx } = getCurrentInstance()
 
-const singerInfo = ref({})
-const curTab = ref('first')
+const tabList = [
+  { label: '介绍', name: 'desc', component: SingerDtl },
+  { label: 'top50', name: 'top', component: SongList },
+  { label: '全部歌曲', name: 'allSong', component: SongList },
+  { label: '专辑', name: 'album', component: AlbumList },
+  { label: 'MV', name: 'mv', component: MvListVue }
+]
+
+const singerInfo: Ref<SingerDetailInterface> = ref({
+  name: '',
+  nickname: '',
+  identifyTag: [],
+  identities: [],
+  description: '',
+  briefDesc: ''
+})
+const curTab = ref('desc')
 
 const singerId = ref(ctx.$root.$route.params.singerId)
+
 const getSingerDetail = () => {
   service.get(`/api/artist/detail?id=${singerId.value}`).then(res => {
     const { artist, user } = res.data
@@ -116,7 +139,7 @@ getSingerSong()
 
 <style lang="less" scoped>
 .singer-detail {
-  padding: 10px 20px;
+  padding: 10px 20px 30px;
 
   .singer-detail-header {
 

@@ -54,29 +54,31 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .layout {
+  position: relative;
   width: 100vw;
   height: 100vh;
   &-header {
     display: flex;
     align-items: center;
     height: @layout-header-height;
-    background: #9796f0;
-    background: -webkit-linear-gradient(to right, #fbc7d4, #9796f0);
-    background: linear-gradient(to right, #fbc7d4, #9796f0);
-    animation: linearGradient 6s ease-in-out 1s infinite alternate forwards;
+    background: rgba(#9796f0, .1);
+    box-shadow: 0px 6px 3px -7px rgb(#9796f0, .7);
+    // background: -webkit-linear-gradient(to right, #fbc7d4, #9796f0);
+    // background: linear-gradient(to right, #fbc7d4, #9796f0);
+    // animation: linearGradient 6s ease-in-out 1s infinite alternate forwards;
 
     &-left {
       display: flex;
       align-items: center;
       height: 100%;
       margin-left: 6px;
-      color: #f5f5f5;
+      // color: #f5f5f5;
       animation: textColor 6s ease-in-out 1s infinite alternate forwards;
 
       .logo {
         width: 130px;
         height: 36px;
-        background: url('~@/assets/images/logo_jn.png') no-repeat;
+        background: transparent url('~@/assets/images/logo_jn.png') no-repeat;
         background-size: 100% 100%;
       }
     }
@@ -91,7 +93,9 @@ export default defineComponent({
     }
 
     &-left {
+      padding-top: 5px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
     &-right {

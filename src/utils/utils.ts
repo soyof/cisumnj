@@ -96,6 +96,36 @@ export const formatDate = (val: string | number | Date, type?: string): string =
   }
 }
 
+/**
+ * @description: 将毫秒转为hh:mm:ss
+ * @param {number} time
+ * @return {string} hh:mm:ss
+ * @Date: 2022-05-08 20:44:15
+ */
+export const formatTime2HMS = (time: number) => {
+  let second: number | string = 0
+  let totalMinute = 0
+  let minute: number | string = 0
+  let hour: number | string = 0
+  const totalSecond = time / 1000
+  if (totalSecond > 59) {
+    second = totalSecond % 60
+    totalMinute = totalSecond / 60
+  } else {
+    second = totalSecond
+  }
+  if (totalMinute > 59) {
+    minute = totalMinute % 60
+    hour = totalMinute / 60
+  } else {
+    minute = totalMinute
+  }
+  hour < 10 ? (hour = `0${hour}`) : hour
+  minute < 10 ? (minute = `0${minute}`) : minute
+  second < 10 ? (second = `0${second}`) : second
+  return `${hour}:${minute}:${second}`
+}
+
 // /**
 //   * @name: 43236
 //   * @description: 将下划线字符串转为驼峰

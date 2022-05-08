@@ -2,8 +2,8 @@
   <template v-for="item in list">
     <el-sub-menu
       v-if="item.children && item.children.length > 0"
-      :key="routePath(item.path)"
-      :index="routePath(item.path)"
+      :key="item.path"
+      :index="item.path"
     >
       <template #title>
         <el-tooltip
@@ -23,11 +23,10 @@
         <SideMenuItem
           v-if="childItem.children && childItem.children.length > 0"
           :list="childItem.children"
-          :prefix="routePath(childItem.path)"
         />
         <el-menu-item
           v-else
-          :index="routePath(childItem.path)"
+          :index="childItem.path"
         >
           <el-tooltip
             class="ellipsis"
@@ -43,9 +42,9 @@
     </el-sub-menu>
     <el-menu-item
       v-else
-      :key="routePath(item.path)"
-      :index="routePath(item.path)"
-      :route="routePath(item.path)"
+      :key="item.path"
+      :index="item.path"
+      :route="item.path"
     >
       <el-tooltip
         class="ellipsis"
@@ -67,20 +66,10 @@ import { Options, Vue } from 'vue-class-component'
     list: {
       type: Array,
       required: true
-    },
-    prefix: {
-      type: String,
-      required: false,
-      default: ''
     }
   },
   data() {
     return {
-    }
-  },
-  computed: {
-    routePath() {
-      return (path) => `${this.prefix}/${path}`
     }
   },
   mounted() {

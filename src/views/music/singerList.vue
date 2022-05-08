@@ -95,7 +95,7 @@ import * as _ from 'lodash'
     }
   },
   created() {
-    this.getMoreThrottle = _.throttle(this.getSingerListForMore, 2000)
+    this.getMoreThrottle = _.debounce(this.getSingerListForMore, 2000, { leading: true })
   },
   mounted() {
     this.$nextTick(() => {
@@ -104,7 +104,7 @@ import * as _ from 'lodash'
     })
   },
   methods: {
-    getSingerList(pageIndex: Number) {
+    getSingerList(pageIndex: number) {
       const arr = this.areaAndType.split(',')
       const params = {
         limit: this.limit,
@@ -142,7 +142,7 @@ import * as _ from 'lodash'
     getMore() {
       this.getMoreThrottle()
     },
-    handleChooseLetter(val: String) {
+    handleChooseLetter(val: string) {
       this.initial = val
       this.getSingerList(1)
     },

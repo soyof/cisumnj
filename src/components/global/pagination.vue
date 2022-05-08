@@ -91,7 +91,6 @@ import { Options, Vue } from 'vue-class-component'
       })
     },
     currentChange(page: any) {
-      console.log(page)
       const temp = {
         [this.props.page]: page
       }

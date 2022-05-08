@@ -7,7 +7,6 @@
   >
     <SideMenuItem
       :list="routers"
-      :prefix="routePrefix"
     />
   </el-menu>
 </template>
@@ -28,15 +27,28 @@ import routers from '@/router/music'
     }
   },
   created() {
-    this.defaultActive = this.$route.path
-    this.routers = this.handleFilterHiddenMenu(routers)
+    const routersList = this.handleFilterHiddenMenu(routers)
+    this.routers = this.handleRouterPath(routersList, this.routePrefix)
   },
   mounted() {
+    this.defaultActive = this.getDefaultActive(this.routers)
   },
   methods: {
     handleOpen() {
     },
     handleClose() {},
+    handleRouterPath(list: any, routePrefix: string) {
+      return list.map((item: any) => {
+        const newItem = {
+          ...item,
+          path: `${routePrefix}/${item.path}`
+        }
+        if (item.children) {
+          newItem.children = this.handleRouterPath(item.children, newItem.path)
+        }
+        return newItem
+      })
+    },
     handleFilterHiddenMenu(routers: any) {
       const list = routers.filter((item: any) => {
         if (item.children && item.children.length > 0 && (!item.meta || !item.meta.hidden)) {
@@ -45,6 +57,23 @@ import routers from '@/router/music'
         return !item.meta || !item.meta.hidden
       })
       return list
+    },
+    getDefaultActive(list: any) {
+      const curRoute = this.$route.path
+      let activeRoute = curRoute
+      for (let ids = 0; ids < list.length; ids++) {
+        const item = list[ids]
+        const isExist = curRoute.includes(item.path)
+        if (isExist) {
+          activeRoute = item.path
+          break
+        } else {
+          if (item.children && item.children.length > 0) {
+            activeRoute = this.getDefaultActive(item.children)
+          }
+        }
+      }
+      return activeRoute
     }
   }
 })

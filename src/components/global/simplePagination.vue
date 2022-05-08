@@ -1,16 +1,18 @@
 <template>
   <el-tag
-    v-if="isMore"
+    v-if="pages.isMore"
     class="simple-pagination"
     @click="getMore"
   >
-    {{ props.title }}
+    {{ loading ? '加载中...' : props.title }}
   </el-tag>
 </template>
 
 <script lang='ts' setup>
-// import * as _ from 'lodash'
-import { defineProps } from 'vue'
+import * as _ from 'lodash'
+import { defineProps, defineEmits } from 'vue'
+
+const emit = defineEmits(['update:change', 'change'])
 
 const props = defineProps({
   title: {
@@ -18,37 +20,51 @@ const props = defineProps({
     required: false,
     default: '查看更多'
   },
-  isMore: {
-    type: Boolean,
-    required: false,
-    default: true
-  },
   pages: {
     type: Object,
     required: false,
     default() {
       return {
         pageIndex: 0,
-        limit: 30
+        limit: 30,
+        isMore: true
       }
     }
+  },
+  loading: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  wait: {
+    type: Number,
+    required: false,
+    default: 500
   }
 })
 
-// const getListForMore = () => {
-//   console.log(props)
-//   console.log(ref)3
+const handleMoreFn = () => {
+  if (props.loading) return
+  const { pages } = props
+  pages.pageIndex++
+  if (pages.isMore) {
+    emit('update:change', true)
+    emit('change', true)
+  }
+}
 
-//   console.log(_)
-// }
+const getMoreDebounce = _.debounce(handleMoreFn, props.wait || 500, { leading: true })
 
-// const getMoreThrottle = _.throttle(getListForMore, 2000)
+const getMore = () => {
+  getMoreDebounce()
+}
 
 </script>
 
 <style lang="less" scoped>
 .simple-pagination {
   width: 100%;
+  height: 32px;
   cursor: pointer;
   .center();
 }

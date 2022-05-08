@@ -79,8 +79,8 @@ export const useNowDate = () => {
   getDateInfo()
 
   const isShowHolidayName = computed(() => {
-    return () => {
-      const { holiday_or, holiday, holiday_today } = curDateInfo.value
+    return (dateInfo: any) => {
+      const { holiday_or, holiday, holiday_today } = dateInfo
       return holiday_or && holiday && holiday_today && (holiday_or !== 10 && holiday !== holiday_or) || holiday_today === 1
     }
   })
@@ -89,8 +89,6 @@ export const useNowDate = () => {
     const keyArr = Object.keys(curDateInfo.value) || []
     return keyArr && keyArr.length > 0
   })
-
-  console.log(isDateInfoExist.value)
 
   return {
     curDateInfo,
