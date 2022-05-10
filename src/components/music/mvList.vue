@@ -77,7 +77,6 @@ const getMvList = () => {
   service.get(`/api/artist/mv?id=${props.singerId}&limit=${pages.limit}&offset=${pages.pageIndex * pages.limit}`).then((res: any) => {
     pages.isMore = !!res.hasMore
     mvList.value = mvList.value.concat(res.mvs)
-    console.log(res)
   }).finally(() => {
     loading.value = false
   })

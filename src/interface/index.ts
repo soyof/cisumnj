@@ -11,3 +11,9 @@ export interface SingerDetailInterface {
   description: String | null
   briefDesc: String | null
 }
+
+export interface SingerInfoInterface {
+  briefDesc: string | null
+  topicData: Array<any>
+  introduction: Array<any>
+}

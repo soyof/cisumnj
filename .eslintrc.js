@@ -306,6 +306,7 @@ module.exports = {
       'alignAttributesVertically': false,
       'ignores': []
     }],
+    "vue/no-v-html": ['off', 'never'],
     'vue/html-quotes': ['error', 'double'],
     'vue/html-self-closing': ['warn', {
       'html': {

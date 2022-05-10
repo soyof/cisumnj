@@ -99,31 +99,32 @@ export const formatDate = (val: string | number | Date, type?: string): string =
 /**
  * @description: 将毫秒转为hh:mm:ss
  * @param {number} time
- * @return {string} hh:mm:ss
+ * @param {boolean} hasHours
+ * @return {string} hh:mm:ss | mm:ss
  * @Date: 2022-05-08 20:44:15
  */
-export const formatTime2HMS = (time: number) => {
+export const formatTime2HMS = (time: number, hasHours = false) => {
   let second: number | string = 0
   let totalMinute = 0
   let minute: number | string = 0
   let hour: number | string = 0
-  const totalSecond = time / 1000
+  const totalSecond = parseInt(`${time / 1000}`, 10)
   if (totalSecond > 59) {
-    second = totalSecond % 60
-    totalMinute = totalSecond / 60
+    second = parseInt(`${totalSecond > 59 ? totalSecond % 60 : totalSecond}`, 10)
+    totalMinute = parseInt(`${totalSecond / 60}`, 10)
   } else {
     second = totalSecond
   }
   if (totalMinute > 59) {
-    minute = totalMinute % 60
-    hour = totalMinute / 60
+    minute = parseInt(`${totalMinute > 59 ? totalMinute % 60 : totalMinute}`, 10)
+    hour = parseInt(`${totalMinute / 60}`, 10)
   } else {
     minute = totalMinute
   }
   hour < 10 ? (hour = `0${hour}`) : hour
   minute < 10 ? (minute = `0${minute}`) : minute
   second < 10 ? (second = `0${second}`) : second
-  return `${hour}:${minute}:${second}`
+  return hasHours ? `${hour}:${minute}:${second}` : `${minute}:${second}`
 }
 
 // /**

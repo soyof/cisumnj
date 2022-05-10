@@ -173,6 +173,7 @@ getSingerSong()
     .singer-desc {
       margin-top: 10px;
       line-height: 22px;
+      font-size: 12px;
     }
   }
 
