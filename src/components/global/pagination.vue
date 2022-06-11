@@ -5,7 +5,7 @@
     :pageSize="pager[props.size]"
     :total="pager[props.total]"
     :background="background"
-    class="pagination"
+    class="self-pagination"
     :layout="layout"
     @size-change="sizeChange"
     @current-change="currentChange"
@@ -104,7 +104,12 @@ export default class Pagination extends Vue {}
 
 <style lang="less" scoped>
 .self-pagination {
-  margin-top: 20px;
-  text-align: right;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  :deep(.el-pagination__sizes) {
+    margin-right: 0;
+    margin-left: 10px;
+  }
 }
 </style>

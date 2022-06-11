@@ -26,3 +26,9 @@ export const letterInfo = [
   { value: 'y', label: 'Y' },
   { value: 'z', label: 'Z' }
 ]
+
+export const genderInfo = {
+  '0': '保密',
+  '1': '男',
+  '2': '女'
+}

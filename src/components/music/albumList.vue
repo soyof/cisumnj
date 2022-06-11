@@ -44,9 +44,8 @@
 <script lang="ts" setup>
 
 import { defineProps, reactive, ref, onMounted } from 'vue'
-import Api from '@/plugins/axios'
+import service from '@/plugins/axios'
 import { useFormatDate } from '@/hooks/useFormatDate'
-const service = Api.service
 
 const props = defineProps({
   singerId: {

@@ -52,9 +52,8 @@
 <script lang='ts' setup>
 // import VideoItem from '@/components/music/videoItem.vue'
 import { defineProps, reactive, ref } from 'vue'
-import Api from '@/plugins/axios'
+import service from '@/plugins/axios'
 import { useFormatDate } from '@/hooks/useFormatDate'
-const service = Api.service
 
 const props = defineProps({
   singerId: {

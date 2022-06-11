@@ -1,8 +1,14 @@
 <template>
   <div class="song-list">
     <el-table :data="songList" style="width: 100%" size="small">
-      <el-table-column type="index" label="#" width="100" />
-      <el-table-column prop="name" label="歌曲名" />
+      <el-table-column type="index" label="#" width="60" />
+      <el-table-column prop="name" label="歌曲名">
+        <template #default="scope">
+          <div style="display: flex; align-items: center">
+            <span class="song-name" @click="playSong(scope.row)">{{ scope.row.name }}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column v-if="isTop" prop="pubTimes" label="发布时间" />
       <el-table-column v-if="!isTop" prop="alName" label="专辑" />
     </el-table>
@@ -12,14 +18,17 @@
       :loading="loading"
       @change="getSingerSongList"
     />
+    <audio v-if="songUrl" :src="songUrl" autoplay></audio>
   </div>
 </template>
 
 <script lang='ts' setup>
 import { defineProps, reactive, ref, onMounted } from 'vue'
-import Api from '@/plugins/axios'
+import { useStore } from 'vuex'
+import service from '@/plugins/axios'
 import { formatDate } from '@/utils/utils'
-const service = Api.service
+
+const store = useStore()
 
 const props = defineProps({
   url: {
@@ -41,6 +50,8 @@ const props = defineProps({
     default: false
   }
 })
+
+const songUrl = ref('')
 
 const loading = ref(false)
 
@@ -88,6 +99,11 @@ const getSingerSongList = () => {
 onMounted(() => {
   getSingerSongList()
 })
+
+const playSong = (info: any) => {
+  const songId = info.id
+  store.dispatch('music/getCurMusicUrl', songId)
+}
 </script>
 
 <style lang="less" scoped>
@@ -101,6 +117,11 @@ onMounted(() => {
   .el-table {
     :deep(.el-table__cell) {
       padding: 5px 0;
+
+      .song-name {
+        color: @active-color;
+        cursor: pointer;
+      }
     }
   }
 

@@ -79,8 +79,7 @@ import SingerDtl from '@/components/music/singerDtl.vue'
 import { SingerDetailInterface } from '@/interface'
 
 import { ref, getCurrentInstance, Ref } from 'vue'
-import Api from '@/plugins/axios'
-const service = Api.service
+import service from '@/plugins/axios'
 const { ctx } = getCurrentInstance()
 
 const tabList = [
@@ -104,8 +103,8 @@ const curTab = ref('desc')
 const singerId = ref(ctx.$root.$route.params.singerId)
 
 const getSingerDetail = () => {
-  service.get(`/api/artist/detail?id=${singerId.value}`).then(res => {
-    const { artist, user } = res.data
+  service.get(`/api/artist/detail?id=${singerId.value}`).then((res: any) => {
+    const { artist, user } = res
     if (artist) {
       singerInfo.value = { ...artist }
     }
@@ -117,8 +116,8 @@ const getSingerDetail = () => {
 }
 
 const getSingerSong = () => {
-  service.get(`/api/artist/detail?id=${singerId.value}`).then(res => {
-    const { artist, user } = res.data
+  service.get(`/api/artist/detail?id=${singerId.value}`).then((res: any) => {
+    const { artist, user } = res
     if (artist) {
       singerInfo.value = { ...artist }
     }

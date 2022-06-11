@@ -62,7 +62,7 @@ export default defineComponent({
     align-items: center;
     height: @layout-header-height;
     background: rgba(#9796f0, .1);
-    box-shadow: 0px 6px 3px -7px rgb(#9796f0, .7);
+    box-shadow: 0 6px 3px -7px rgb(#9796f0, .7);
     // background: -webkit-linear-gradient(to right, #fbc7d4, #9796f0);
     // background: linear-gradient(to right, #fbc7d4, #9796f0);
     // animation: linearGradient 6s ease-in-out 1s infinite alternate forwards;
@@ -101,6 +101,7 @@ export default defineComponent({
     &-right {
 
       :deep(.layout-content-right-scrollbar-wrap) {
+        box-sizing: border-box;
         padding: @layout-content-padding;
       }
     }

@@ -8,6 +8,12 @@ const app = createApp(App)
 import router from './router'
 import store from './store'
 
+import '@/assets/iconfont/iconfont.css'
+
+import drag from '@/directives/drag'
+// 指令
+app.directive('drag', drag)
+
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import "element-plus/es/components/icon/style/css"

@@ -9,8 +9,8 @@ export const createArrayFn = (len: number): any[] => [...new Array(len).keys()]
 /**
   * @name: 43236
   * @description: 获取数据类型
-  * @param {Any} 需要判断类型的数据
-  * @return {Any} string, number, boolean, object, array, null, undefined等
+  * @param {any} val 需要判断类型的数据
+  * @return {any} string, number, boolean, object, array, null, undefined等
   * @Date: 2021-12-01 14:44:20
   */
 export const getValueType = (val: any) => {

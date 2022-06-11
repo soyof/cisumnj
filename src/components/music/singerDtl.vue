@@ -49,9 +49,8 @@
 <script lang='ts' setup>
 import TopicList from '@/components/music/topicList'
 import { defineProps, ref, Ref } from 'vue'
-import Api from '@/plugins/axios'
+import service from '@/plugins/axios'
 import { SingerInfoInterface } from '@/interface'
-const service = Api.service
 
 const props = defineProps({
   singerId: {
@@ -68,7 +67,6 @@ const singerInfo: Ref<SingerInfoInterface> = ref({
 
 const getSingerDetail = () => {
   service.get(`/api/artist/desc?id=${props.singerId}`).then((res: any) => {
-    console.log(res)
     singerInfo.value = { ...res }
   })
 }

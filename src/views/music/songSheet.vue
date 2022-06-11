@@ -41,10 +41,29 @@
       size="mini"
       style="width: 100%"
     >
+      <el-table-column type="expand" width="30">
+        <template #default="scope">
+          <SongSheetDtl :info="scope.row.creator" />
+        </template>
+      </el-table-column>
+      <el-table-column label="封面" width="80" align="center">
+        <template #default="scope">
+          <div style="display: flex; align-items: center; justify-content: center">
+            <el-image
+              style="width: 30px; height: 30px"
+              :src="scope.row.coverImgUrl"
+              :previewSrcList="[scope.row.coverImgUrl]"
+              :initialIndex="4"
+              previewTeleported
+              fit="cover"
+            />
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column
         prop="name"
         label="名称"
-        width="180"
+        width="300"
         showOverflowTooltip
       />
       <el-table-column prop="description" label="描述" showOverflowTooltip />
@@ -75,14 +94,12 @@
       <el-table-column
         prop="createTime"
         label="创建时间"
-        width="150"
-        showOverflowTooltip
+        width="180"
       />
       <el-table-column
         prop="updateTime"
         label="更新时间"
-        width="150"
-        showOverflowTooltip
+        width="180"
       />
     </el-table>
     <Pagination
@@ -96,10 +113,14 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+import SongSheetDtl from '@/components/music/songSheetDtl.vue'
 import { formatDate } from '@/utils/utils'
 import tableMixins from '@/mixins/table'
 
 @Options({
+  components: {
+    SongSheetDtl
+  },
   mixins: [tableMixins],
   data() {
     return {
@@ -121,8 +142,14 @@ import tableMixins from '@/mixins/table'
   created() {
     this.getHotCateList()
     this.getMusicList()
+    this.getList()
   },
   methods: {
+    getList() {
+      this.$http.get('/api/countries/code/list').then((res: any) => {
+        console.log(res)
+      })
+    },
     getHotCateList() {
       this.$http.get('/api/playlist/hot').then((res: any) => {
         if (!res) return
@@ -146,6 +173,7 @@ import tableMixins from '@/mixins/table'
           item.updateTime = updateTime ? formatDate(updateTime) : '--'
           return item
         })
+        console.log(this.list)
       })
     },
     handleHotChange() {
@@ -167,10 +195,10 @@ import tableMixins from '@/mixins/table'
       }
 
       if (pageHeight) {
-        const height = Math.floor(pageHeight - headerHeight - pagiHeight - 50)
+        const height = Math.floor(pageHeight - headerHeight - pagiHeight - 66)
         this.tableHeight = height > 100 ? height : 100
       } else {
-        this.tableHeight = 'calc(100vh - 160px)'
+        this.tableHeight = 'calc(100vh - 150px)'
       }
     }
   }
@@ -182,15 +210,11 @@ export default class Pages extends Vue {}
 .song-sheet {
   &-header {
     display: flex;
+    align-items: center;
     &-item {
-      height: 40px;
-      padding-bottom: 20px;
+      height: 30px;
       margin-right: 16px;
     }
-  }
-
-  .pagination {
-    padding-top: 20px;
   }
 }
 </style>

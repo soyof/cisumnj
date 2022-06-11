@@ -50,7 +50,12 @@ const handleSingerDetail = () => {
     .el-image {
       width: 100%;
       height: 100%;
+      transition: transform 0.3s;
       .center();
+
+      &:hover {
+        transform: scale(1.2);
+      }
 
       .image-slot {
         width: 100%;

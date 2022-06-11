@@ -160,17 +160,17 @@ const isCurDay = computed(() => {
 
 // 获取当前月份相关信息
 const getCurMonthInfo = async() => {
-  const result: any = await http.get('https://api.apihubs.cn/holiday/get?', {
+  const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
     cn: '1',
     size: '31',
     order_by: 1,
     year: formatDate(curDate.value, 'yyyy'),
     month: formatDate(curDate.value, 'yyyyMM')
   })
-  if (result.data && result.data.list) {
+  if (result && result.list) {
     monthInfo.value = [
       ...monthInfo.value,
-      ...result.data.list
+      ...result.list
     ]
   }
 }
@@ -190,7 +190,7 @@ const getDateInfo = async() => {
       date: formatDate(curDate.value, 'yyyyMMdd')
     })
     curDateInfo.value = {
-      ...result.data.list[0]
+      ...result.list[0]
     }
   }
 }

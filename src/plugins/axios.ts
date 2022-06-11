@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-// import { ElMessage as Message } from 'element-plus'
+// import { getValueType } from '@/utils/utils'
+import { ElMessage as Message } from 'element-plus'
 
 type AxiosOption = {
   baseURL: string
@@ -15,11 +16,11 @@ interface ResponseData<T> {
   code: string
 }
 
-// const errorFn = (error: string) => {
-//   Message.error({
-//     message: error || '服务器异常！'
-//   })
-// }
+const errorFn = (error: string) => {
+  Message.error({
+    message: error || '服务器异常！'
+  })
+}
 
 const _mixinUrl = (url: string | undefined, param: any): string => {
   url = url || ''
@@ -67,7 +68,8 @@ _axios.interceptors.response.use(
     } else if (data.error === 0) {
       return data
     }
-    return Promise.reject(new Error(data.message))
+    errorFn(data.message || data.msg || data)
+    return Promise.reject(data.message || data.msg || data)
   },
   (error: any) => {
     return Promise.reject(error)
@@ -76,6 +78,7 @@ _axios.interceptors.response.use(
 
 class Services {
   service;
+
   constructor(config: AxiosOption) {
     this.service = axios.create(config)
 
@@ -94,11 +97,12 @@ class Services {
         return response
       }
       if (data.code === 200 || data.code === 0) {
-        return data
+        return data.data || data
       } else if (data.error === 0) {
         return data
       }
-      return Promise.reject(new Error(data.message))
+      errorFn(data.message || data.msg || data)
+      return Promise.reject(data.message || data.msg || data)
     }, (error: any) => {
       return Promise.reject(error)
     })

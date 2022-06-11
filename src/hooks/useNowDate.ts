@@ -73,7 +73,7 @@ export const useNowDate = () => {
       size: '31',
       date: formatDate(new Date(), 'yyyymmdd')
     })
-    curDateInfo.value = result.data.list[0]
+    curDateInfo.value = result.list[0]
   }
 
   getDateInfo()
