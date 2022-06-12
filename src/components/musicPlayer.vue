@@ -2,18 +2,24 @@
   <div v-drag="'.music-drag'" class="music-player">
     <div class="music-player-wrap">
       <div class="music-pre music-player-item">
-        <i class="iconfont icon-shangyigeshangyiqu"></i>
+        <i class="iconfont icon-shangyigeshangyiqu disabled"></i>
       </div>
       <div class="play-or-suspend music-player-item" @click="handlePlayMusic">
-        <i v-if="mIsPlay" class="iconfont icon-zanting1"></i>
-        <i v-else class="iconfont icon-bofang"></i>
+        <i
+          v-if="mIsPlay"
+          :class="['iconfont', 'icon-zanting1', {'disabled': !songPlayUrl}]"
+        ></i>
+        <i
+          v-else
+          :class="['iconfont', 'icon-bofang', {'disabled': !songPlayUrl}]"
+        ></i>
       </div>
       <div class="m-next music-player-item">
-        <i class="iconfont icon-xiayigexiayiqu"></i>
+        <i class="iconfont icon-xiayigexiayiqu disabled"></i>
       </div>
-      <div class="m-stop music-player-item">
-        <i class="iconfont icon-stopo"></i>
-      </div>
+      <!--      <div class="m-stop music-player-item">-->
+      <!--        <i class="iconfont icon-stopo"></i>-->
+      <!--      </div>-->
       <div class="m-info music-player-item">
         <div class="m-avatar">
           <img v-if="songImgUrl" :src="songImgUrl" alt="">
@@ -24,37 +30,39 @@
             {{ songName }}
           </div>
           <div class="m-process">
-            <MProgress />
+            <MProgress
+              @change="handleProgressChange"
+            />
           </div>
         </div>
       </div>
-      <div class="m-download music-player-item">
-        <i class="iconfont icon-xiazai"></i>
+      <div class="m-download music-player-item" @click="handleDownloadMusic">
+        <i :class="['iconfont', 'icon-xiazai', {'disabled': !songPlayUrl}]"></i>
       </div>
       <div class="music-drag music-player-item">
         <i class="iconfont icon-drag"></i>
       </div>
     </div>
-    <p :ref="p"></p>
   </div>
   <audio
     v-if="songPlayUrl"
     id="mpAudioDom"
     :ref="el => mpAudioDom = el"
     :src="songPlayUrl"
+    preload
     class="mp-audio"
   ></audio>
 </template>
 
 <script lang="ts" setup>
 import MProgress from '@/components/music/mProgress'
+import services from '@/plugins/axios'
 import { ref, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 
 const infoUrl = require('@/assets/images/logo6.png')
 const store = useStore()
 const mpAudioDom = ref()
-const p = ref(null)
 
 const mInfo = computed(() => {
   return store.state?.music?.curMusicInfo
@@ -76,15 +84,44 @@ const songName = computed(() => {
 })
 
 watch(mIsPlay, (val) => {
+  if (!songPlayUrl.value) return
+  const duration = Math.ceil((mpAudioDom.value.duration || 0) * 1000)
+  store.commit('music/SET_M_TOTAL_TIME', duration)
   if (val) {
-    mpAudioDom.value.play()
+    handlePlay()
   } else {
+    handlePauseMusic()
     mpAudioDom.value.pause()
   }
 })
 
+const handlePlay = () => {
+  if (!mpAudioDom.value) {
+    store.commit('music/SET_M_IS_PLAY', false)
+    return
+  }
+  store.dispatch('music/mPlay')
+  mpAudioDom.value.play()
+}
+
 const handlePlayMusic = () => {
   store.commit('music/SET_M_IS_PLAY', !mIsPlay.value)
+}
+
+const handlePauseMusic = () => {
+  store.dispatch('music/mPause')
+}
+
+const handleProgressChange = (val: number) => {
+  if (songPlayUrl.value) {
+    store.commit('music/SET_M_CUR_TIME', val)
+    mpAudioDom.value.currentTime = val / 1000
+  }
+}
+
+const handleDownloadMusic = () => {
+  if (!songPlayUrl.value) return
+  services.getDownload(songPlayUrl.value, {}, songName.value)
 }
 
 </script>
@@ -96,10 +133,11 @@ const handlePlayMusic = () => {
   top: 50px;
   width: 800px;
   height: 50px;
-  background-color: #f5f5f5;
   border-radius: 25px;
   z-index: 999;
   overflow: hidden;
+  background-image: linear-gradient(-225deg, #E3FDF5 0%, #f1f2f8 48%, #FFE6FA 100%);
+  animation: playerBgc  3s linear infinite forwards !important;
 
   .music-player-wrap {
     width: calc(100% - 50px);
@@ -112,7 +150,13 @@ const handlePlayMusic = () => {
       .iconfont {
         margin-right: 5px;
         font-size: 28px;
+        color: @active-color;
         cursor: pointer;
+
+        &.disabled {
+          color: #ccc;
+          cursor: not-allowed;
+        }
       }
     }
 

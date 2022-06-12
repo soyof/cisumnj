@@ -1,11 +1,10 @@
-import service from '@/plugins/axios'
+import { getSongPlayInfo, getSongDtl } from '@/utils/commonApi'
 
-const getSongPlayInfo = (musicId: string) => {
-  return service.get('/api/song/url', { id: musicId })
-}
+let mTimer: any = null
 
-const getSongDtl = (musicId: string) => {
-  return service.get('/api/song/detail', { ids: musicId })
+const handleClearInterVal = () => {
+  clearInterval(mTimer)
+  mTimer = null
 }
 
 export default {
@@ -41,7 +40,32 @@ export default {
         }
         commit('SET_CUR_MUSIC_INFO', newInfo || {})
         commit('SET_M_TOTAL_TIME', newInfo.dt || 0)
+        commit('SET_M_IS_PLAY', false)
       })
+    },
+    mPlay({ state, commit }: any) {
+      if (!state.curMusicInfo || !state.curMusicInfo.url) {
+        commit('SET_M_IS_PLAY', false)
+        return
+      }
+      if (mTimer) {
+        handleClearInterVal()
+      }
+      mTimer = setInterval(_ => {
+        let curTime = state.mCurTime || 0
+        const totalTime = state.mTotalTime || 0
+        if (curTime + 1000 >= totalTime) {
+          curTime = totalTime
+          handleClearInterVal()
+          commit('SET_M_IS_PLAY', false)
+        } else {
+          curTime = curTime + 1000
+        }
+        commit('SET_M_CUR_TIME', curTime)
+      }, 1000)
+    },
+    mPause({ state, commit }: any) {
+      handleClearInterVal()
     },
     clearPlayMusic({ commit }: any) {
       commit('SET_CUR_MUSIC_INFO', {})

@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 // import { getValueType } from '@/utils/utils'
 import { ElMessage as Message } from 'element-plus'
+import { downloadFile } from '@/utils/fileUtils'
 
 type AxiosOption = {
   baseURL: string
@@ -129,6 +130,11 @@ class Services {
   }
   delete<T>(url: string, params?: Object, config = {}): Promise<ResponseData<T>> {
     return this.service.delete(_mixinUrl(url, params), config)
+  }
+
+  getDownload(url: string, params?: Object, fileName = ''): any {
+    const newUrl = _mixinUrl(url, params)
+    return downloadFile(newUrl, fileName)
   }
 }
 
