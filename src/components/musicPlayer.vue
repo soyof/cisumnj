@@ -1,5 +1,5 @@
 <template>
-  <div v-drag="'.music-drag'" class="music-player">
+  <div v-if="!isSmall" v-drag="'.music-drag'" :class="['music-player', { 'small': isSmall }]">
     <div class="music-player-wrap">
       <div class="music-pre music-player-item">
         <i class="iconfont icon-shangyigeshangyiqu disabled"></i>
@@ -42,6 +42,29 @@
       <div class="music-drag music-player-item">
         <i class="iconfont icon-drag"></i>
       </div>
+      <div class="music-small" @click="handleSmall(true)">
+        <el-icon>
+          <Minus />
+        </el-icon>
+      </div>
+    </div>
+  </div>
+  <div v-else v-drag class="small-player">
+    <div :class="['m-info', { 'animate-play': mIsPlay }]">
+      <img v-if="songImgUrl" :src="songImgUrl" alt="">
+      <img v-else :src="infoUrl" class="default">
+    </div>
+    <div class="small-player-opera" @dblclick="handleSmall(false)">
+      <i
+        v-if="mIsPlay"
+        :class="['iconfont', 'icon-zanting1', {'disabled': !songPlayUrl}]"
+        @click="handlePlayMusic"
+      ></i>
+      <i
+        v-else
+        :class="['iconfont', 'icon-bofang', {'disabled': !songPlayUrl}]"
+        @click="handlePlayMusic"
+      ></i>
     </div>
   </div>
   <audio
@@ -55,6 +78,7 @@
 </template>
 
 <script lang="ts" setup>
+import { Minus } from '@element-plus/icons-vue'
 import MProgress from '@/components/music/mProgress'
 import services from '@/plugins/axios'
 import { ref, computed, watch } from 'vue'
@@ -63,6 +87,7 @@ import { useStore } from 'vuex'
 const infoUrl = require('@/assets/images/logo6.png')
 const store = useStore()
 const mpAudioDom = ref()
+const isSmall = ref(true)
 
 const mInfo = computed(() => {
   return store.state?.music?.curMusicInfo
@@ -105,6 +130,7 @@ const handlePlay = () => {
 }
 
 const handlePlayMusic = () => {
+  if (!songPlayUrl.value) return
   store.commit('music/SET_M_IS_PLAY', !mIsPlay.value)
 }
 
@@ -123,14 +149,16 @@ const handleDownloadMusic = () => {
   if (!songPlayUrl.value) return
   services.getDownload(songPlayUrl.value, {}, songName.value)
 }
-
+const handleSmall = (flag) => {
+  isSmall.value = flag
+}
 </script>
 
 <style lang="less" scoped>
 .music-player {
   position: fixed;
   left: 25%;
-  top: 50px;
+  top: 90%;
   width: 800px;
   height: 50px;
   border-radius: 25px;
@@ -138,8 +166,14 @@ const handleDownloadMusic = () => {
   overflow: hidden;
   background-image: linear-gradient(-225deg, #E3FDF5 0%, #f1f2f8 48%, #FFE6FA 100%);
   animation: playerBgc  3s linear infinite forwards !important;
+  transition: width .3s;
+
+  &.small {
+    width: 50px;
+  }
 
   .music-player-wrap {
+    position: relative;
     width: calc(100% - 50px);
     height: 100%;
     margin: 0 25px;
@@ -195,8 +229,76 @@ const handleDownloadMusic = () => {
 
     .music-drag {
       .icon-drag {
+        font-size: 24px;
         cursor: move;
       }
+    }
+
+    .music-small {
+      position: absolute;
+      right: -25px;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 25px;
+      height: 50px;
+      cursor: pointer;
+      .el-icon {
+        font-size: 20px;
+        color: #79bbff;
+      }
+    }
+  }
+}
+.small-player {
+  position: fixed;
+  left: 95%;
+  top: 90%;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  z-index: 999;
+  overflow: hidden;
+  background-image: linear-gradient(-225deg, #E3FDF5 0%, #f1f2f8 48%, #FFE6FA 100%);
+  animation: playerBgc  3s linear infinite forwards !important;
+  transition: width .3s;
+
+  .small-player-opera {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(#000, .5);
+    .center();
+    display: none;
+    .iconfont {
+      font-size: 28px;
+      color: #fff;
+      cursor: pointer;
+
+      &.disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &:hover {
+    .small-player-opera {
+      display: flex;
+    }
+  }
+  .m-info {
+    width: 100%;
+    height: 100%;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+
+    &.animate-play {
+      animation: rotateAnimate 8s linear infinite;
     }
   }
 }
