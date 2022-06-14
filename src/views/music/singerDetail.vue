@@ -71,7 +71,7 @@
 
 <script lang='ts' setup>
 // import { Picture as IconPicture } from '@element-plus/icons-vue'
-import SongList from '@/components/music/songList.vue'
+import SingerSongList from '@/components/music/singerSongList.vue'
 import AlbumList from '@/components/music/albumList.vue'
 import MvListVue from '@/components/music/mvList.vue'
 import SingerDtl from '@/components/music/singerDtl.vue'
@@ -84,8 +84,8 @@ const { ctx } = getCurrentInstance()
 
 const tabList = [
   { label: '介绍', name: 'desc', component: SingerDtl },
-  { label: 'top50', name: 'top', component: SongList },
-  { label: '全部歌曲', name: 'allSong', component: SongList },
+  { label: 'top50', name: 'top', component: SingerSongList },
+  { label: '全部歌曲', name: 'allSong', component: SingerSongList },
   { label: '专辑', name: 'album', component: AlbumList },
   { label: 'MV', name: 'mv', component: MvListVue }
 ]

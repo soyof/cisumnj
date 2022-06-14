@@ -25,5 +25,11 @@ export default [
     title: '歌单',
     name: 'songSheet',
     component: () => import(/* webpackChunkName: "SongSheet" */ '@/views/music/songSheet.vue')
+  },
+  {
+    path: 'mSongList',
+    title: '搜索',
+    name: 'mSongList',
+    component: () => import(/* webpackChunkName: "songList" */ '@/views/music/mSongList.vue')
   }
 ]
