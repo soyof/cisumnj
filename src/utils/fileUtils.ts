@@ -6,7 +6,6 @@ export const downloadFile = (url: string, fileName = '') => {
     const content = ajax.response
     const a = document.createElement('a')
     const fileType = getFileTypeOrName(url)
-    console.log(fileName)
     a.download = fileName ? `${fileName}.${fileType}` : `${getRandomStr()}.${fileType}`
     a.style.display = 'none'
     const blob = new Blob([content])

@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import MusicPlayer from '@/components/musicPlayer'
+import MusicPlayer from '@/components/musicPlayer.vue'
 import { defineComponent } from 'vue'
 // import { ElConfigProvider } from 'element-plus'
 

@@ -65,7 +65,11 @@
         label="名称"
         width="300"
         showOverflowTooltip
-      />
+      >
+        <template #default="scope">
+          <span class="actives" @click="handleTargetSongDtl(scope.row)">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="description" label="描述" showOverflowTooltip />
       <el-table-column
         prop="playCount"
@@ -173,7 +177,6 @@ import tableMixins from '@/mixins/table'
           item.updateTime = updateTime ? formatDate(updateTime) : '--'
           return item
         })
-        console.log(this.list)
       })
     },
     handleHotChange() {
@@ -200,6 +203,9 @@ import tableMixins from '@/mixins/table'
       } else {
         this.tableHeight = 'calc(100vh - 150px)'
       }
+    },
+    handleTargetSongDtl(info: any) {
+      this.$router.push(`/epoch/mSongList/${info.id}`)
     }
   }
 })

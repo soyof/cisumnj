@@ -32,19 +32,7 @@
             ref="singerBoxScrollbar"
             :height="singerContentHeight"
           >
-            <div class="singer-list-box">
-              <SingerItem
-                v-for="item in singerList"
-                :key="`${item.id}-singer-list`"
-                :info="item"
-                @detail="handleSingerDetail"
-              />
-              <i
-                v-for="(item, ids) in Array(singerList.length - 2)"
-                :key="`singer-list-placeholder-${ids}`"
-                class="singer-list-placeholder"
-              ></i>
-            </div>
+            <ArtistList :list="singerList" />
             <el-tag
               v-if="isMore"
               class="more"
@@ -65,6 +53,7 @@ import { Options, Vue } from 'vue-class-component'
 import SingerType from '@/components/music/singerType.vue'
 // @ts-ignore
 import SingerItem from '@/components/music/singerItem.vue'
+import ArtistList from '@/components/music/artistList.vue'
 
 import tableMixins from '@/mixins/table'
 import { letterInfo } from '@/dic'
@@ -74,7 +63,8 @@ import * as _ from 'lodash'
 @Options({
   components: {
     SingerType,
-    SingerItem
+    SingerItem,
+    ArtistList
   },
   mixins: [tableMixins],
   data() {
@@ -234,31 +224,6 @@ export default class SingerList extends Vue {}
         :deep(.el-scrollbar__view) {
           width: 100%;
           padding-bottom: 20px;
-        }
-
-        .singer-list-box {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          width: 100%;
-          height: 100%;
-          padding-bottom: 15px;
-          box-sizing: border-box;
-          // margin: 0 1%;
-
-          // &:after {
-          //   content: '';
-          //   flex: 1;
-          // }
-
-          .singer-item {
-            width: 150px;
-            overflow: hidden;
-          }
-
-          > i.singer-list-placeholder {
-            width: 150px;
-          }
         }
 
         .more {

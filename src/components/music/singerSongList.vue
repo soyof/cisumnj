@@ -130,9 +130,7 @@ const handleDownloadSong = (info: any) => {
   if (info.ar) {
     songName = `${songName} - ${info.ar.map((item: any) => item.name).join(' ')}`
   }
-
   downloadSong(info.id, songName)
-  console.log(songName)
 }
 </script>
 

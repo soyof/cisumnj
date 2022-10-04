@@ -43,7 +43,7 @@ export const formatDate = (val: string | number | Date, type?: string): string =
     val = val.replace(/^(\d{4})(\d{2})(\d{2})$/, '$1/$2/$3')
   }
 
-  if (!isNaN(+val) && (val.length === 10 || val.length === 13)) { // 处理时间戳形式的数据
+  if (!isNaN(+val) && val.length > 10) { // 处理时间戳形式的数据
     val = +val
   }
 
@@ -225,12 +225,16 @@ export const formatTime2HMS = (time: number, hasHours = false) => {
 // }
 
 // 判断参数是否是其中之一
-export function oneOf(value: any, validList: any) {
+export const oneOf = (value: any, validList: any) => {
   for (let i = 0; i < validList.length; i++) {
     if (value === validList[i]) {
       return true
     }
   }
   return false
+}
+
+export const randomFn = () => {
+  return Math.random().toString(36).slice(-6)
 }
 

@@ -17,6 +17,7 @@ const tableMixins: ComponentOptions = {
       window.addEventListener('resize', this.handleCalcTableHeight)
     },
     handleRemoveEvent() {
+      window.addEventListener('unload', this.handleCalcTableHeight)
       window.removeEventListener('resize', this.handleCalcTableHeight)
     },
     handleCalcTableHeight() {

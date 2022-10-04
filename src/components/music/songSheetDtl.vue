@@ -71,8 +71,6 @@ const props = defineProps({
   }
 })
 
-console.log(props.info)
-
 </script>
 
 <style lang="less" scoped>

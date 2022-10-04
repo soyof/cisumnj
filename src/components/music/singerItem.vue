@@ -1,8 +1,13 @@
 <template>
   <div class="singer-item" @click="handleSingerDetail">
     <div class="singer-item-avatar">
-      <el-image :src="info.img1v1Url" lazy>
+      <el-image :src="info.img1v1Url" lazy loading="lazy">
         <template #placeholder>
+          <div class="image-slot">
+            <el-icon><icon-picture /></el-icon>
+          </div>
+        </template>
+        <template #error>
           <div class="image-slot">
             <el-icon><icon-picture /></el-icon>
           </div>
@@ -51,7 +56,6 @@ const handleSingerDetail = () => {
       width: 100%;
       height: 100%;
       transition: transform 0.3s;
-      .center();
 
       &:hover {
         transform: scale(1.2);

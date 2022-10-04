@@ -1,28 +1,49 @@
 <template>
   <div class="m-song-list">
-    <div class="header-search">
-      <el-input v-model="keywords" />
-    </div>
-    <div class="song-list-wrap">
-      <SongList :list="sList" />
-    </div>
+    <SongList v-model:max-height="tableHeight" :list="songList" />
+    <!--    <Pagination-->
+    <!--      :ref="el => autoTableInfo.paginationDom = el"-->
+    <!--      :pages="pages"-->
+    <!--      @change="getSongList"-->
+    <!--    />-->
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import SongList from '@/components/music/songList'
+import SongList from '@/components/music/songList.vue'
+import { useAutoTable } from '@/hooks/useAutoTable'
+import { useRoute } from 'vue-router'
+import { reactive, ref } from 'vue'
 import services from '@/plugins/axios'
+import { formatTime2HMS } from '@/utils/utils'
+const $route = useRoute()
+const { tableHeight } = useAutoTable()
 
-const keywords = ref('')
-const sList = ref([])
+const pages = reactive({
+  pageIndex: 0,
+  limit: 999,
+  total: 0
+})
+const songList = ref([])
 
 const getSongList = () => {
-  services.get('/api/search', {
-    keywords
-  }).then((res: any) => {
-    sList.value = res.songs || []
-    console.log(res.songs)
+  const params = {
+    id: $route.params.id,
+    limit: pages.limit,
+    offset: pages.pageIndex
+  }
+  services.get('/api/playlist/track/all', params).then((res: any) => {
+    songList.value = (res.songs || []).map((item: any) => {
+      const author = (item.ar || []).map((arItem: any) => {
+        return arItem.name
+      }).join('、')
+      return {
+        ...item,
+        author,
+        duration: formatTime2HMS(item.dt)
+      }
+    })
+  }).finally(() => {
   })
 }
 getSongList()
