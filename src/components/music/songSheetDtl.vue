@@ -64,7 +64,7 @@ import { defineProps } from 'vue'
 import { formatDate } from '@/utils/utils'
 import { genderInfo } from '@/dic'
 
-const props = defineProps({
+defineProps({
   info: {
     type: Object,
     required: true
