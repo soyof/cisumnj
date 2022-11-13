@@ -20,8 +20,30 @@
   text-overflow: ellipsis;
 }
 
+.ellipsisMore(@line) {
+  overflow: hidden; //超出隐藏
+  text-overflow: ellipsis; //溢出用省略号显示
+  display: -webkit-box; // 将对象作为弹性伸缩盒子模型显示
+  // 控制行数
+  -webkit-line-clamp: @line; //超出num隐藏
+  -webkit-box-orient: vertical; // 从上到下垂直排列子元素
+}
+
+//.overflow(@line) when (isnumber(@line)){
+//  text-overflow:ellipsis;
+//  display: -webkit-box;
+//  -webkit-box-orient: vertical;
+//  -webkit-line-clamp: @line;
+//  overflow: hidden;
+//}
+
 .center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.actives {
+  color: @active-color;
+  background-color: @active-bgl-color;
 }

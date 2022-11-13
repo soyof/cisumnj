@@ -28,7 +28,6 @@
 <script lang="ts" setup>
 
 import { reactive, ref, computed } from 'vue'
-import SongList from '@/components/music/songList.vue'
 import ArtistList from '@/components/music/artistList.vue'
 
 import services from '@/plugins/axios'

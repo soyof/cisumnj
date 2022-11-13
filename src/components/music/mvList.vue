@@ -21,7 +21,11 @@
         prop="name"
         label="MV名称"
         minWidth="150"
-      />
+      >
+        <template #default="scope">
+          <span class="actives" @click="handleTargetPlayMv(scope.row)">{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         showOverflowTooltip
         prop="artistName"
@@ -78,6 +82,15 @@ const getMvList = () => {
     mvList.value = mvList.value.concat(res.mvs)
   }).finally(() => {
     loading.value = false
+  })
+}
+
+const handleTargetPlayMv = (info) => {
+  console.log(info)
+  // /mv/detail
+  service.get(`/api/mv/url?id=${info.id}`).then((res: any) => {
+    console.log(res)
+  }).finally(() => {
   })
 }
 getMvList()

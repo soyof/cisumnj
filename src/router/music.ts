@@ -6,7 +6,7 @@ export default [
     component: () => import(/* webpackChunkName: "Pages" */ '@/views/pages.vue')
   },
   {
-    path: 'singer',
+    path: 'singerList',
     title: '歌手',
     name: 'singerList',
     component: () => import(/* webpackChunkName: "SingerList" */ '@/views/music/singerList.vue')
@@ -40,5 +40,14 @@ export default [
     },
     name: 'mSongList',
     component: () => import(/* webpackChunkName: "songList" */ '@/views/music/mSongList.vue')
+  },
+  {
+    path: 'songMvList',
+    title: 'MV',
+    meta: {
+      hidden: false
+    },
+    name: 'songMvList',
+    component: () => import(/* webpackChunkName: "songMvList" */ '@/views/music/songMvList.vue')
   }
 ]

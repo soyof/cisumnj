@@ -32,3 +32,5 @@ export const genderInfo = {
   '1': '男',
   '2': '女'
 }
+
+export const areaListCN = ['全部', '内地', '港台', '欧美', '日本', '韩国']
