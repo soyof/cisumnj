@@ -45,6 +45,7 @@ export const useAutoTable = () => {
   return {
     tableHeight,
     headerDom,
-    paginationDom
+    paginationDom,
+    handleCalcTableHeight
   }
 }

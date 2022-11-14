@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  name: 'ThrottleButton',
   props: {
     throttleTime: {
       type: Number || String,

@@ -1,16 +1,38 @@
 <template>
   <div class="song-mv-list">
     <div class="song-mv-list-left">
-      <div
-        v-for="(area, ids) in areaListCN"
-        :key="`song-mv-area-${ids}`"
-        :class="['song-mv-cate-item', curArea === area ? 'actives' : '']"
-        @click="handleChooseArea(area)"
-      >
-        {{ area }}
-      </div>
+      <el-scrollbar height="100%">
+        <div class="song-mv-list-left-wrap">
+          <div class="song-type-item">
+            <el-tag class="cate-type" effect="dark" type="danger">
+              语种
+            </el-tag>
+            <div
+              v-for="(area, ids) in areaListCN"
+              :key="`song-mv-area-${ids}`"
+              :class="['song-mv-cate-item', curArea === area ? 'actives' : '']"
+              @click="handleChooseAreaOrType(area, 'curArea')"
+            >
+              {{ area }}
+            </div>
+          </div>
+          <div class="song-type-item">
+            <el-tag class="cate-type" effect="dark">
+              类型
+            </el-tag>
+            <div
+              v-for="(mvType, ids) in mvTypeList"
+              :key="`song-mv-type-${ids}`"
+              :class="['song-mv-cate-item', curType === mvType ? 'actives' : '']"
+              @click="handleChooseAreaOrType(mvType, 'curType')"
+            >
+              {{ mvType }}
+            </div>
+          </div>
+        </div>
+      </el-scrollbar>
     </div>
-    <div class="song-mv-list-right">
+    <div v-loading="cateLoading" class="song-mv-list-right">
       <el-scrollbar height="100%">
         <div class="mv-list-wrap">
           <template v-if="mvList && mvList.length">
@@ -28,7 +50,11 @@
               class="item-list-placeholder"
             ></em>
           </template>
-          <SimplePagination />
+          <SimplePagination
+            :pages="pages"
+            :loading="loading"
+            @change="getMvList"
+          />
         </div>
       </el-scrollbar>
     </div>
@@ -36,29 +62,51 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import services from '@/plugins/axios'
-import { areaListCN } from '@/dic/index'
+import { areaListCN, mvTypeList } from '@/dic'
 import MvItem from '@/components/music/mvItem.vue'
-// import SimplePagination from '@/components/global/simplePagination.vue'
 
-console.log(services)
-
+const loading = ref(false)
+const cateLoading = ref(false)
 const curArea = ref('内地')
+const curType = ref('全部')
 const mvList = ref([])
-console.log(mvList)
+const pages = reactive({
+  pageIndex: 0,
+  limit: 30,
+  isMore: true
+})
 
-const getMvList = () => {
-  services.get(`/api/mv/all?area=${curArea.value}&limit=${50}&offset=${1}`).then((res: any) => {
-    console.log(res)
-    mvList.value = res
+const getMvList = (isAdd = true) => {
+  if (!isAdd) {
+    cateLoading.value = true
+  }
+  loading.value = true
+  services.get(`/api/mv/all?area=${curArea.value}&type=${curType.value}&limit=${pages.limit}&offset=${pages.pageIndex * pages.limit}`).then((res: any) => {
+    const newList = res.data || []
+    if (isAdd) {
+      mvList.value = mvList.value.concat(newList)
+    } else {
+      mvList.value = newList
+    }
+    pages.isMore = res.hasMore
+  }).finally(() => {
+    loading.value = false
+    cateLoading.value = false
   })
 }
 
-const handleChooseArea = (area: string) => {
-  curArea.value = area
+const handleChooseAreaOrType = (area: string, key: string) => {
+  if (key === 'curArea') {
+    curArea.value = area
+  } else {
+    curType.value = area
+  }
+  pages.pageIndex = 1
+  pages.isMore = true
+  getMvList(false)
 }
-
 getMvList()
 </script>
 
@@ -68,21 +116,40 @@ getMvList()
   height: @layout-pages-height;
   display: flex;
   .song-mv-list-left {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-    padding-right: 5px;
+    width: 120px;
+    min-width: 120px;
+    max-width: 120px;
     border-right: 1px solid @border-gray-color;
-    .song-mv-cate-item {
-      width: 100%;
-      height: 35px;
-      cursor: pointer;
-      border-radius: 5px;
-      box-shadow: 2px 2px 5px #ccc;
-      margin-bottom: 12px;
-      .center();
-      &.actives {
-        .actives();
+    .song-mv-list-left-wrap {
+      padding: 0 16px 0 6px;
+      .song-type-item {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #909399;
+        &:first-child {
+          padding-top: 0;
+        }
+        &:last-child {
+          padding-bottom: 0;
+          border-bottom: none;
+        }
+        .cate-type {
+          width: 100%;
+          height: 35px;
+          margin-bottom: 8px;
+        }
+        .song-mv-cate-item {
+          width: 100%;
+          height: 35px;
+          cursor: pointer;
+          border-radius: 5px;
+          box-shadow: 2px 2px 5px #ccc;
+          margin-bottom: 12px;
+          .center();
+          &.actives {
+            .actives-bgc();
+          }
+        }
       }
     }
   }

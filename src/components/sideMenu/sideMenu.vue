@@ -15,6 +15,7 @@
 import { Options, Vue } from 'vue-class-component'
 import SideMenuItem from './sideMenuItem.vue'
 import routers from '@/router/music'
+
 @Options({
   components: {
     SideMenuItem
@@ -24,6 +25,11 @@ import routers from '@/router/music'
       routers: [],
       routePrefix: '/epoch',
       defaultActive: ''
+    }
+  },
+  watch: {
+    '$route'(val) {
+      this.defaultActive = this.getDefaultActive(this.routers)
     }
   },
   created() {
@@ -50,19 +56,18 @@ import routers from '@/router/music'
       })
     },
     handleFilterHiddenMenu(routers: any) {
-      const list = routers.filter((item: any) => {
+      return routers.filter((item: any) => {
         if (item.children && item.children.length > 0 && (!item.meta || !item.meta.hidden)) {
           return this.handleFilterHiddenMenu(item.children)
         }
         return !item.meta || !item.meta.hidden
       })
-      return list
     },
     getDefaultActive(list: any) {
       const curRoute = this.$route.path
       let activeRoute = curRoute
-      for (let ids = 0; ids < list.length; ids++) {
-        const item = list[ids]
+      for (const element of list) {
+        const item = element
         const isExist = curRoute.includes(item.path)
         if (isExist) {
           activeRoute = item.path
@@ -70,6 +75,8 @@ import routers from '@/router/music'
         } else {
           if (item.children && item.children.length > 0) {
             activeRoute = this.getDefaultActive(item.children)
+          } else {
+            activeRoute = ''
           }
         }
       }

@@ -1,6 +1,6 @@
 <template>
   <div class="m-search-info">
-    <div :ref="el => headerDom = el" class="header-search">
+    <div class="header-search">
       <el-select v-model="searchType" class="m-2" @change="handleSelectChange">
         <el-option
           v-for="item in selectList"
@@ -17,7 +17,6 @@
     </div>
     <SimplePagination
       v-if="pages.isMore"
-      :ref="el => paginationDom = el"
       :pages="pages"
       :loading="loading"
       @change="getSongList(0)"
@@ -28,13 +27,15 @@
 <script lang="ts" setup>
 
 import { reactive, ref, computed } from 'vue'
+import SongList from '@/components/music/songList.vue'
 import ArtistList from '@/components/music/artistList.vue'
 
 import services from '@/plugins/axios'
-import { useAutoTable } from '@/hooks/useAutoTable'
+// import { useAutoTable } from '@/hooks/useAutoTable'
 import { formatTime2HMS } from '@/utils/utils'
 
-const { tableHeight, headerDom, paginationDom }: any = useAutoTable()
+// const { tableHeight, headerDom, paginationDom, handleCalcTableHeight } = useAutoTable()
+const tableHeight = ref('calc(100vh - 190px)')
 const keywords = ref('')
 const searchType = ref('1')
 const songList = ref([])
@@ -101,6 +102,7 @@ const getSongList = (flag: 0 | 1) => {
     } else if (searchType.value === '100') {
       setSingerList(res, flag)
     }
+    // handleCalcTableHeight()
   }).finally(() => {
     loading.value = false
   })
@@ -168,7 +170,10 @@ const getSongList = (flag: 0 | 1) => {
     }
   }
   .simple-pagination {
+    position: absolute;
     margin-top: 10px;
+    bottom: -50px;
+    background-color: @active-bgl-color;
   }
 }
 </style>

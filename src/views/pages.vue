@@ -114,7 +114,6 @@ const nowDate = new Date()
 const curDate = ref(nowDate)
 const curDateInfo = ref({})
 const monthInfo = ref([])
-// const holidayList = ref([10, 99, 22, 12, 13, 14, 15, 11, 16, 17, 18, 19, 21, 23, 44, 45, 55, 56, 58, 59, 61, 62, 66, 67, 68, 69, 70, 71, 72, 77, 78, 88, 89, 90, 91, 92, 93, 95, 96, 97])
 
 const calendar = ref()
 const selectDate = (val: string) => {
@@ -167,10 +166,10 @@ const getCurMonthInfo = async() => {
     year: formatDate(curDate.value, 'yyyy'),
     month: formatDate(curDate.value, 'yyyyMM')
   })
-  if (result && result.list) {
+  if (result && result.data && result.data.list) {
     monthInfo.value = [
       ...monthInfo.value,
-      ...result.list
+      ...result.data.list
     ]
   }
 }
@@ -189,8 +188,10 @@ const getDateInfo = async() => {
       size: '31',
       date: formatDate(curDate.value, 'yyyyMMdd')
     })
-    curDateInfo.value = {
-      ...result.list[0]
+    if (result && result.data) {
+      curDateInfo.value = {
+        ...result.data.list[0]
+      }
     }
   }
 }

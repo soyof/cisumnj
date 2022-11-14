@@ -42,7 +42,7 @@
       </div>
     </el-tooltip>
     <div class="oth-info">
-      <span class="author">{{ config.artistName }}</span>
+      <span class="author" @click="handleTargetSingerDtl(config)">{{ config.artistName }}</span>
       <span class="play-count" title="播放次数">{{ config.playCount }}</span>
     </div>
   </div>
@@ -50,10 +50,12 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { formatTime2HMS } from '@/utils/utils'
+import { useRouter } from 'vue-router'
 import { Picture } from '@element-plus/icons-vue'
+import { formatTime2HMS } from '@/utils/utils'
 import service from '@/plugins/axios'
 
+const $router = useRouter()
 // eslint-disable-next-line no-undef
 const props = defineProps({
   config: {
@@ -85,7 +87,7 @@ const toDateTime = computed(() => {
 
 const getPlayUrl = () => {
   service.get(`/api/mv/url?id=${props.config.id}`).then((res: any) => {
-    playSrcInfo.value = res.url || ''
+    playSrcInfo.value = res.data ? (res.data.url || '') : ''
   }).finally(() => {
   })
 }
@@ -104,6 +106,10 @@ const endInterVal = () => {
   startTime.value = 0
   clearInterval(intervalTime)
   intervalTime = null
+}
+
+const handleTargetSingerDtl = (info: any) => {
+  $router.push(`/epoch/singer/${info.artistId}`)
 }
 
 const handleVdMouseEnter = () => {
@@ -204,6 +210,12 @@ const handleVdMouseLeave = () => {
       white-space: nowrap;
       &:last-child {
         margin-right: 0;
+      }
+    }
+    .author {
+      cursor: pointer;
+      &:hover {
+        color: @active-color;
       }
     }
   }

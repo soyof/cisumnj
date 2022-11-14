@@ -98,7 +98,7 @@ class Services {
         return response
       }
       if (data.code === 200 || data.code === 0) {
-        return data.data || data.result || data
+        return data.result || data
       } else if (data.error === 0) {
         return data
       }

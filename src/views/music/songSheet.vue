@@ -151,7 +151,7 @@ import tableMixins from '@/mixins/table'
   methods: {
     getList() {
       this.$http.get('/api/countries/code/list').then((res: any) => {
-        console.log(res)
+        // console.log(res)
       })
     },
     getHotCateList() {

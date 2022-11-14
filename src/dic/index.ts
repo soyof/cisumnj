@@ -34,3 +34,5 @@ export const genderInfo = {
 }
 
 export const areaListCN = ['全部', '内地', '港台', '欧美', '日本', '韩国']
+
+export const mvTypeList = ['全部', '官方版', '原生', '现场版', '网易出品']
