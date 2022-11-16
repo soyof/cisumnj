@@ -125,6 +125,7 @@ const handleVdMouseLeave = () => {
 <style lang="less" scoped>
 .vd-item {
   width: 240px;
+  min-width: 240px;
   padding-bottom: 8px;
   border-radius: 8px;
   overflow: hidden;
