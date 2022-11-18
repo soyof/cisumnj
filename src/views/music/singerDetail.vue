@@ -70,7 +70,6 @@
 </template>
 
 <script lang='ts' setup>
-// import { Picture as IconPicture } from '@element-plus/icons-vue'
 import SingerSongList from '@/components/music/singerSongList.vue'
 import AlbumList from '@/components/music/albumList.vue'
 import MvListVue from '@/components/music/video/mvList.vue'

@@ -54,7 +54,6 @@
 </template>
 
 <script lang='ts' setup>
-// import VideoItem from '@/components/music/videoItem.vue'
 import { defineProps, reactive, ref } from 'vue'
 import service from '@/plugins/axios'
 import { useFormatDate } from '@/hooks/useFormatDate'
