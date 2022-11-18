@@ -34,36 +34,17 @@
     </div>
     <div v-loading="cateLoading" class="song-mv-list-right">
       <el-tabs v-model="curTab" class="song-mv-list-tabs">
-        <el-tab-pane label="全部" name="allMv">
+        <el-tab-pane
+          v-for="tab in tabList"
+          :key="tab.name"
+          :label="tab.title"
+          :name="tab.name"
+        >
           <VdList
-            v-if="curTab === 'allMv'"
-            ref="allMv"
+            v-if="curTab === tab.name"
+            :ref="vdRefInfo[tab.ref]"
             v-model:queryInfo="queryInfo"
-            apiUrl="/api/mv/all"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="最新" name="newMv">
-          <VdList
-            v-if="curTab === 'newMv'"
-            ref="newMv"
-            v-model:queryInfo="queryInfo"
-            apiUrl="/api/mv/first"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="推荐" name="recMv">
-          <VdList
-            v-if="curTab === 'recMv'"
-            ref="recMv"
-            v-model:queryInfo="queryInfo"
-            apiUrl="/api/personalized/mv"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="网易出品" name="othMv">
-          <VdList
-            v-if="curTab === 'othMv'"
-            ref="othMv"
-            v-model:queryInfo="queryInfo"
-            apiUrl="/api/mv/exclusive/rcmd"
+            :apiUrl="tab.apiUrl"
           />
         </el-tab-pane>
       </el-tabs>
@@ -74,11 +55,8 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from 'vue'
 import { areaListCN, mvTypeList } from '@/dic'
-import VdList from '@/components/music/vdList.vue'
-const allMv = ref()
-const newMv = ref()
-const recMv = ref()
-const othMv = ref()
+import VdList from '@/components/music/video/vdList.vue'
+
 const areaList = reactive(areaListCN)
 const typeList = reactive(mvTypeList)
 const curTab = ref('allMv')
@@ -87,6 +65,20 @@ const queryInfo = reactive({
   type: '全部'
 })
 const cateLoading = ref(false)
+const tabList = reactive([
+  { title: '全部MV', name: 'allMv', ref: 'allMv', apiUrl: '/api/mv/all' },
+  { title: '最新MV', name: 'newMv', ref: 'newMv', apiUrl: '/api/mv/first' },
+  { title: 'MV排名', name: 'mvRank', ref: 'mvRank', apiUrl: '/api/top/mv' },
+  { title: '推荐MV', name: 'recMv', ref: 'recMv', apiUrl: '/api/personalized/mv' },
+  { title: '网易出品MV', name: 'othMv', ref: 'othMv', apiUrl: '/api/mv/exclusive/rcmd' }
+])
+const vdRefInfo: any = {
+  allMv: ref(),
+  newMv: ref(),
+  mvRank: ref(),
+  recMv: ref(),
+  othMv: ref()
+}
 
 watch(curTab, (val) => {
   const noQuery = ['recMv', 'othMv']
@@ -109,20 +101,7 @@ const handleChooseAreaOrType = (val: string, key: string) => {
   } else {
     queryInfo.type = val
   }
-  switch (curTab.value) {
-    case 'allMv':
-      allMv.value?.getMvList(0)
-      break
-    case 'newMv':
-      newMv.value?.getMvList(0)
-      break
-    case 'recMv':
-      recMv.value?.getMvList(0)
-      break
-    case 'othMv':
-      othMv.value?.getMvList(0)
-      break
-  }
+  vdRefInfo[curTab.value].value[0]?.getMvList(0)
 }
 </script>
 

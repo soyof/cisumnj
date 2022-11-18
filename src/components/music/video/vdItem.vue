@@ -4,6 +4,7 @@
       class="vd-image-wrap"
       @mouseenter="handleVdMouseEnter"
       @mouseleave="handleVdMouseLeave"
+      @click="handleTargetDtl"
     >
       <el-image
         :src="config.cover"
@@ -25,6 +26,13 @@
         >
           <source :src="playSrcInfo" type="video/mp4">
           <source :src="playSrcInfo" type="video/webm">
+          <track
+            label="Chinese"
+            kind="captions"
+            srclang="zh"
+            default
+            src=""
+          >
         </video>
       </div>
       <div v-show="!stayTime" class="vd-oth-info-top">
@@ -37,7 +45,7 @@
       :content="config?.name || '--'"
       placement="bottom"
     >
-      <div class="vd-title">
+      <div class="vd-title" @click="handleTargetDtl">
         {{ config?.name || "--" }}
       </div>
     </el-tooltip>
@@ -112,6 +120,10 @@ const handleTargetSingerDtl = (info: any) => {
   $router.push(`/epoch/singer/${info.artistId}`)
 }
 
+const handleTargetDtl = () => {
+  $router.push(`/epoch/songMvDtl/${props.config.id}/${props.config.artistId}`)
+}
+
 const handleVdMouseEnter = () => {
   if (startTime.value && stayTime.value) return
   startInterVal()
@@ -136,16 +148,16 @@ const handleVdMouseLeave = () => {
     cursor: pointer;
     width: 100%;
     height: 130px;
-    .el-image {
+    :deep(.el-image) {
       width: 100%;
       height: 130px;
       border-radius: 6px;
       overflow: hidden;
-      :deep(img) {
+      img {
         transition: transform .5s ease;
       }
       &:hover {
-        :deep(img) {
+        img {
           transform: scale(1.3);
         }
       }

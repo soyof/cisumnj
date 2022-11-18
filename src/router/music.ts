@@ -49,5 +49,14 @@ export default [
     },
     name: 'songMvList',
     component: () => import(/* webpackChunkName: "songMvList" */ '@/views/music/songMvList.vue')
+  },
+  {
+    path: 'songMvDtl/:mvId/:arId',
+    title: 'MV详情页',
+    meta: {
+      hidden: true
+    },
+    name: 'songMvDtl',
+    component: () => import(/* webpackChunkName: "songMvList" */ '@/views/music/songMvDtl.vue')
   }
 ]

@@ -73,7 +73,7 @@
 // import { Picture as IconPicture } from '@element-plus/icons-vue'
 import SingerSongList from '@/components/music/singerSongList.vue'
 import AlbumList from '@/components/music/albumList.vue'
-import MvListVue from '@/components/music/mvList.vue'
+import MvListVue from '@/components/music/video/mvList.vue'
 import SingerDtl from '@/components/music/singerDtl.vue'
 
 import { SingerDetailInterface } from '@/interface'

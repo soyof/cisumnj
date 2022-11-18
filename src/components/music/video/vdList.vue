@@ -1,34 +1,37 @@
 <template>
-  <el-scrollbar class="vd-list-scrollbar">
-    <div class="vd-list-wrap">
-      <template v-if="vdList && vdList.length">
-        <VdItem
-          v-for="item in vdList"
-          :key="item.id"
-          class="mv-list-item"
-          :config="item"
+  <div class="vd-list-box">
+    <el-scrollbar v-if="vdList && vdList.length > 0" class="vd-list-scrollbar">
+      <div class="vd-list-wrap">
+        <template v-if="vdList && vdList.length">
+          <VdItem
+            v-for="item in vdList"
+            :key="item.id"
+            class="mv-list-item"
+            :config="item"
+          />
+        </template>
+        <template v-if="vdList && vdList.length - 2 > 0">
+          <em
+            v-for="(item, ids) in Array(vdList.length - 2)"
+            :key="`item-placeholder-${ids}`"
+            class="item-list-placeholder"
+          ></em>
+        </template>
+        <SimplePagination
+          v-if="pages.isMore"
+          :pages="pages"
+          :loading="loading"
+          @change="handleMore"
         />
-      </template>
-      <template v-if="vdList && vdList.length - 2 > 0">
-        <em
-          v-for="(item, ids) in Array(vdList.length - 2)"
-          :key="`item-placeholder-${ids}`"
-          class="item-list-placeholder"
-        ></em>
-      </template>
-      <SimplePagination
-        v-if="pages.isMore"
-        :pages="pages"
-        :loading="loading"
-        @change="handleMore"
-      />
-    </div>
-  </el-scrollbar>
+      </div>
+    </el-scrollbar>
+    <SelfEmpty v-else />
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, defineExpose } from 'vue'
-import VdItem from '@/components/music/vdItem.vue'
+import { reactive, ref } from 'vue'
+import VdItem from '@/components/music/video/vdItem.vue'
 import services from '@/plugins/axios'
 
 // eslint-disable-next-line no-undef
@@ -64,10 +67,14 @@ const getMvList = (pageIndex?: number) => {
   if (pageIndex || pageIndex === 0) {
     pages.pageIndex = pageIndex
   }
-  const params = {
+  const params: any = {
     ...props.queryInfo,
     offset: pages.pageIndex * pages.limit,
     limit: pages.limit
+  }
+  const areaAllIsEmpty = ['/api/mv/first', '/api/top/mv']
+  if (areaAllIsEmpty.includes(props.apiUrl) && props.queryInfo?.area === '全部') {
+    params['area'] = ''
   }
   services.get(props.apiUrl, params).then((res: any) => {
     const newList = res.data || res || []
@@ -88,11 +95,16 @@ const handleMore = () => {
 
 getMvList()
 
+// eslint-disable-next-line no-undef
 defineExpose({ getMvList: getMvList })
 
 </script>
 
 <style lang="less" scoped>
+.vd-list-box {
+  width: 100%;
+  height: 100%;
+}
 .vd-list-scrollbar {
   padding: 0 15px;
   border-radius: 8px;
