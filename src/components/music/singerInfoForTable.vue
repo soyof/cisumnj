@@ -18,20 +18,20 @@
         />
       </div>
     </el-descriptions-item>
-    <el-descriptions-item label="用户名" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.userName }}
+    <el-descriptions-item label="用户名" labelClassName="singer-el-descriptions" @click="handleTargetSingerInfo">
+      {{ artistInfo?.userName || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="姓名" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.artistName }}
+      {{ artistInfo?.artistName || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="昵称" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.name }}
+      {{ artistInfo?.name || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="网名" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.nickname }}
+      {{ artistInfo?.nickname || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="性别" labelClassName="singer-el-descriptions">
-      {{ genderInfo[artistInfo?.gender] }}
+      {{ genderInfo[artistInfo?.gender] || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="出生日期" labelClassName="singer-el-descriptions">
       {{ artistInfo.birthday ? formatDate(artistInfo.birthday, 'yyyy-MM-dd') : '--' }}
@@ -40,10 +40,10 @@
       {{ artistInfo.createTime ? formatDate(artistInfo.createTime, 'yyyy-MM-dd') : '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="个人简介" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.briefDesc }}
+      {{ artistInfo?.briefDesc || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="签名" labelClassName="singer-el-descriptions">
-      {{ artistInfo?.signature }}
+      {{ artistInfo?.signature || '--' }}
     </el-descriptions-item>
     <el-descriptions-item label="个人标签" labelClassName="singer-el-descriptions">
       <template v-if="tagListCpd(artistInfo.imageDesc).length > 0">
@@ -94,6 +94,10 @@ const previewSrcList = computed(() => {
   props.artistInfo?.cover && list.push(props.artistInfo.cover)
   return list
 })
+
+const handleTargetSingerInfo = () => {
+
+}
 </script>
 
 <style lang="less" scoped>
