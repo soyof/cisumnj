@@ -1,11 +1,6 @@
 <template>
   <div class="m-song-list">
     <SongList v-model:max-height="tableHeight" :list="songList" />
-    <!--    <Pagination-->
-    <!--      :ref="el => autoTableInfo.paginationDom = el"-->
-    <!--      :pages="pages"-->
-    <!--      @change="getSongList"-->
-    <!--    />-->
   </div>
 </template>
 

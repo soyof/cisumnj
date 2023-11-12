@@ -11,16 +11,40 @@
       </el-table-column>
       <el-table-column prop="author" label="作者" showOverflowTooltip />
       <el-table-column prop="duration" label="时长" showOverflowTooltip />
+      <el-table-column prop="publishTime" label="发布时间" showOverflowTooltip>
+        <template #default="scope">
+          <span class="ellipsis">{{ handlePublishTimes(scope.row.publishTime) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
-        width="100"
+        width="150"
         prop="alName"
         label="操作"
       >
         <template #default="scope">
-          <el-icon @click="handleDownloadSong(scope.row)">
-            <Download />
-          </el-icon>
+          <el-tooltip
+            effect="dark"
+            content="下载"
+            placement="top"
+            :showAfter="1000"
+            :enterable="false"
+          >
+            <el-icon @click="handleDownloadSong(scope.row)">
+              <Download />
+            </el-icon>
+          </el-tooltip>
+          <el-tooltip
+            effect="dark"
+            content="音乐百科"
+            placement="top"
+            :showAfter="1000"
+            :enterable="false"
+          >
+            <el-icon class="music-encyclopedia-icon" @click="handleTargetEncyclopedia(scope.row)">
+              <Box />
+            </el-icon>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -28,12 +52,15 @@
 </template>
 
 <script lang="ts" setup>
-import { Download } from '@element-plus/icons-vue'
+import { Download, Box } from '@element-plus/icons-vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 import { defineProps, defineEmits } from 'vue'
 import { downloadSong } from '@/utils/commonApi'
+import { formatDate } from '@/utils/utils'
 
 const store = useStore()
+const $router = useRouter()
 
 defineEmits('update:maxHeight')
 defineProps({
@@ -67,7 +94,7 @@ const playSong = (info: any) => {
   store.dispatch('music/getCurMusicUrl', songId).then((res: any) => {
     store.commit('music/SET_M_IS_PLAY', false)
     store.commit('music/SET_M_CUR_TIME', 0)
-    setTimeout(_ => {
+    setTimeout(() => {
       store.commit('music/SET_M_IS_PLAY', true)
     }, 200)
   })
@@ -79,6 +106,14 @@ const handleDownloadSong = (info: any) => {
     songName = `${songName} - ${info.ar.map((item: any) => item.name).join(' ')}`
   }
   downloadSong(info.id, songName)
+}
+
+const handlePublishTimes = (times: number) => {
+  return times ? formatDate(times, 'yyyy-MM-dd') : '--'
+}
+
+const handleTargetEncyclopedia = (info: any) => {
+  $router.push(`/epoch/musicEncyclopedia/${info.id}`)
 }
 
 </script>
@@ -102,6 +137,9 @@ const handleDownloadSong = (info: any) => {
       .el-icon {
         color: @active-color;
         cursor: pointer;
+      }
+      .music-encyclopedia-icon {
+        margin-left: 16px;
       }
     }
   }

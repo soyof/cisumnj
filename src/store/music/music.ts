@@ -32,7 +32,7 @@ export default {
   actions: {
     getCurMusicUrl({ commit }: any, musicId: string) {
       return Promise.all([getSongPlayInfo(musicId), getSongDtl(musicId)]).then((data: any) => {
-        const info1 = data[0] && data[0][0] ? data[0][0] : {}
+        const info1 = data[0] && data[0].data[0] ? data[0].data[0] : {}
         const info2 = data[1] ? data[1] : {}
         const newInfo = {
           ...info1,
@@ -51,7 +51,7 @@ export default {
       if (mTimer) {
         handleClearInterVal()
       }
-      mTimer = setInterval(_ => {
+      mTimer = setInterval(() => {
         let curTime = state.mCurTime || 0
         const totalTime = state.mTotalTime || 0
         if (curTime + 1000 >= totalTime) {

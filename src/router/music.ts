@@ -58,5 +58,14 @@ export default [
     },
     name: 'songMvDtl',
     component: () => import(/* webpackChunkName: "songMvList" */ '@/views/music/songMvDtl.vue')
+  },
+  {
+    path: 'musicEncyclopedia/:musicId',
+    title: '音乐百科',
+    meta: {
+      hidden: true
+    },
+    name: 'musicEncyclopedia',
+    component: () => import(/* webpackChunkName: "musicEncyclopedia" */ '@/views/music/musicEncyclopedia.vue')
   }
 ]

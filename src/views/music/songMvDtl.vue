@@ -137,7 +137,6 @@ const mvId = ref($route.params.mvId)
 const arId = computed(() => $route.params.arId)
 
 const handlePlaySameMv = (id: string) => {
-  console.log(id)
   mvId.value = id + ''
 }
 
