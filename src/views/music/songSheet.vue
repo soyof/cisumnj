@@ -38,7 +38,7 @@
       :data="list"
       :max-height="tableHeight"
       stripe
-      size="mini"
+      size="default"
       style="width: 100%"
     >
       <el-table-column type="expand" width="30">

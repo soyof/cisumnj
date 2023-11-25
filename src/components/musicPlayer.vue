@@ -149,7 +149,7 @@ const handleDownloadMusic = () => {
   if (!songPlayUrl.value) return
   services.getDownload(songPlayUrl.value, {}, songName.value)
 }
-const handleSmall = (flag) => {
+const handleSmall = (flag: boolean) => {
   isSmall.value = flag
 }
 </script>

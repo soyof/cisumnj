@@ -60,12 +60,12 @@ export default [
     component: () => import(/* webpackChunkName: "songMvList" */ '@/views/music/songMvDtl.vue')
   },
   {
-    path: 'musicEncyclopedia/:musicId',
-    title: '音乐百科',
+    path: 'musicScore/:musicId',
+    title: '乐普信息',
     meta: {
       hidden: true
     },
     name: 'musicEncyclopedia',
-    component: () => import(/* webpackChunkName: "musicEncyclopedia" */ '@/views/music/musicEncyclopedia.vue')
+    component: () => import(/* webpackChunkName: "musicEncyclopedia" */ '@/views/music/musicScore.vue')
   }
 ]

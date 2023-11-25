@@ -36,7 +36,7 @@
           </el-tooltip>
           <el-tooltip
             effect="dark"
-            content="音乐百科"
+            content="乐普信息"
             placement="top"
             :showAfter="1000"
             :enterable="false"
@@ -113,7 +113,7 @@ const handlePublishTimes = (times: number) => {
 }
 
 const handleTargetEncyclopedia = (info: any) => {
-  $router.push(`/epoch/musicEncyclopedia/${info.id}`)
+  $router.push(`/epoch/musicScore/${info.id}`)
 }
 
 </script>
