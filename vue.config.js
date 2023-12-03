@@ -28,7 +28,7 @@ module.exports = {
   },
   chainWebpack: config => {
     config.plugin('html').tap(args => {
-      args[0].title = 'J_MUSIC'
+      args[0].title = 'Soyo.H_MUSIC'
       return args
     })
   },
