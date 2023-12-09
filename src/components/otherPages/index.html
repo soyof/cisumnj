@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 十进制转N禁止
+    const tenToNFn = (num, base) => {
+      if (base < 2 || base > 36) {
+        console.log('输入有误')
+        return '输入有误'
+      }
+      if (num === 0) {
+        console.log(0)
+        return 0
+      }
+      let res = ''
+      while (num > 0) {
+        const rem = num % base
+        res = (rem < 10 ? rem : String.fromCharCode(65 + rem - 10)) + res
+        num = Math.floor(num / base)
+      }
+      console.log(res)
+      return res
+    }
+    tenToNFn(100, 36)
+    tenToNFn(100, 27)
+
+    // N进制转10禁止
+    const nToTenFn = (num, base) => {
+      const isValidBaseNNumber = /^[0-9A-Za-z]+$/i.test(num);
+      if (!isValidBaseNNumber) {
+          return "输入无效";
+      }
+      console.log(parseInt(num, base))
+      return parseInt(num, base)
+    }
+
+    nToTenFn('2S', 36)
+    nToTenFn('3j', 27)
+
+    /*
+        假设市场上每只股票不同天的价格会波动，但是当天价格恒定, 连续几天价格为50, 55, 60, 58, 如果我们在50买入，大于50卖出就可以获得盈利。
+        现提供起始资金M，并告知连续N天的价格, 计算出最多能盈利多少钱
+        1.1.示例
+        输入: 10000 3 1,2,1
+        输出: 10000
+        注解:
+        1. 1000为起始资金, 3为价格天数，后续为具体的3天的价格
+        2. 1元买入，得10000股，此时2元卖出的20000元，所以盈利=20000-10000=10000
+        1.2.提示
+        1. 价格都为整数，金额或能买到股数在计算过程中以double处理，无需关心精度，得到的结果直接取整使用即可
+        2. 不考虑买卖股票的手续费用
+        3. 必然能买到或卖出
+        4. 每天只有一次出手机会，即每日最多只能做一次买或卖的操作。
+        5. 低买高卖才能赚钱
+    */
+
+    const getMaxProfit = (baseMoney, priceArr) => {
+        const length = priceArr.length
+        let profitMoney = 0
+        let allMoney = baseMoney
+        let maxNum = priceArr[0]
+        let minNum = priceArr[0]
+        let diff = 0
+        const buyArr = []
+
+        for (var i = 0; i < length; i++) {
+            j = i + 1
+            if (priceArr[j] > priceArr[i]) {
+                maxNum = priceArr[j]
+            } else {
+                buyArr.push({
+                    buy: minNum,
+                    sell: maxNum
+                })
+                minNum = priceArr[j]
+                maxNum = priceArr[j]
+            }
+        }
+
+        buyArr.forEach(item => {
+            if (item.sell !== item.buy) {
+                profitMoney += ((allMoney / item.buy) * item.sell) - allMoney
+                allMoney = profitMoney + allMoney
+            }
+        })
+        console.log(profitMoney)
+    }
+
+    /*
+
+        项目团队需要实现一个路由转发模块，转发模块的核心功能之一是根据功能号/接口名来进行路由转发。路由匹配的基本原理是判断实际请求中的功能号/接口名是否与预先配置的转发规则匹配，转发规则支持 '?' 和 '*' 通配符（'?'表示匹配任意单个字符；'*'表示匹配零个或多个任意字符）。比如转发规则串配置为 "600???"，当实际请求中的功能号是 "600570" 时就判定为匹配。现在请你编码实现一个函数来支持是否匹配的判断。
+        注意：要自己编码实现逻辑，不可以调用已有的实现函数。另外在函数编码之前可以用注释说明自己的逻辑思路。
+        提示
+        1.实际请求中的功能号/接口名只包含从0-9的数字或者a-z的英文字母（大小写敏感）
+        2.预定义的模式匹配串只包含从0-9的数字，a-z的字母（大小写敏感）以及字符 '?' 和 '*'
+        程序输入输出要求说明
+        输入参数分为两行，第一行是功能号/接口名；第二行是匹配规则串。
+        输出参数：如果匹配，则输出字符串"true"，否则输出"false"。
+
+        示例 输入: aa    a
+        输出: false
+
+        用例2 输入: aa   *
+        输出: true
+
+        用例3 输入: cb  ?a
+        输出: false
+
+        用例4 输入: acdcb  a*c?b
+        输出: false
+    */
+
+    const getIsRouteSuccess = (request, rule) => {
+        const isFlag1 = rule.length === 1 && rule === '*'
+        const isFlag2 = request.length === 1 && (rule === '?' || rule === '*')
+        const isFlag3 = request === rule
+        if (isFlag1 || isFlag2 || isFlag3) {
+            return true
+        }
+        let ruleIds = 0
+
+        for (var i = 0; i < request.length; i++) {
+            const curRuleItem = rule[ruleIds]
+            const curReqItem = request[i]
+
+            if (curRuleItem === '*') {
+                while (rule[ruleIds] === '*') {
+                    ruleIds++
+                }
+                if (getIsRouteSuccess(request.slice(i), rule.slice(ruleIds))) {
+                    return true
+                }
+                ruleIds--
+            } else if (curRuleItem === '?') {
+                ruleIds++;
+            } else if (curRuleItem === curReqItem) {
+                ruleIds++
+            } else {
+                return false
+            }
+        }
+        return ruleIds === rule.length;
+    }
+
+
+  </script>
+</body>
+</html>
