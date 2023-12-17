@@ -64,7 +64,7 @@ _axios.interceptors.response.use(
     if (response.request.responseType === 'blob') {
       return response
     }
-    if (data.success) {
+    if (data.success || data.code === 1) {
       return data.data
     } else if (data.error === 0) {
       return data
@@ -97,7 +97,7 @@ class Services {
       if (response.request.responseType === 'blob') {
         return response
       }
-      if (data.code === 200 || data.code === 0) {
+      if (data.code === 200 || data.code === 0 || data.code === 1) {
         return data.result || data
       } else if (data.error === 0) {
         return data

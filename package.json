@@ -10,7 +10,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
     "core-js": "^3.6.5",
-    "element-plus": "^2.4.2",
+    "element-plus": "^2.4.4",
     "lodash": "^4.17.21",
     "normalizecss": "^3.0.0",
     "video.js": "^7.20.3",

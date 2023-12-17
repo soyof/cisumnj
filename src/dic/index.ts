@@ -36,3 +36,7 @@ export const genderInfo = {
 export const areaListCN = ['全部', '内地', '港台', '欧美', '日本', '韩国']
 
 export const mvTypeList = ['全部', '官方版', '原生', '现场版', '网易出品']
+
+export const ROLL_TOOLS_APP_ID = 'hrkn0vm1gmsq8krn'
+
+export const ROLL_TOOLS_APP_SECRET = 'EyJP2I0k1K2JPM7067gOQ4mIA8t9fYZF'

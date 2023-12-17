@@ -61,11 +61,38 @@ export default [
   },
   {
     path: 'musicScore/:musicId',
-    title: '乐普信息',
+    title: '乐谱信息',
     meta: {
       hidden: true
     },
     name: 'musicEncyclopedia',
     component: () => import(/* webpackChunkName: "musicEncyclopedia" */ '@/views/music/musicScore.vue')
+  },
+  {
+    path: 'historyToday',
+    title: '历史上的今天',
+    meta: {
+      hidden: false
+    },
+    name: 'historyToday',
+    component: () => import(/* webpackChunkName: "historyToday" */ '@/views/historyToday.vue')
+  },
+  {
+    path: 'funnyJoke',
+    title: '搞笑段子',
+    meta: {
+      hidden: false
+    },
+    name: 'funnyJoke',
+    component: () => import(/* webpackChunkName: "funnyJoke" */ '@/views/funnyJoke.vue')
+  },
+  {
+    path: 'imgList',
+    title: '图片列表',
+    meta: {
+      hidden: false
+    },
+    name: 'imgList',
+    component: () => import(/* webpackChunkName: "imgList" */ '@/views/imgList.vue')
   }
 ]

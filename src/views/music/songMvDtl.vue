@@ -119,11 +119,11 @@ import VideoPlayer from '@/components/music/video/videoPlayer.vue'
 import SimpleVdItem from '@/components/music/video/simpleVdItem.vue'
 
 const $route = useRoute()
-const mvInfo = ref({})
-const artistInfo = ref({})
+const mvInfo: any = ref({})
+const artistInfo: any = ref({})
 const splitVal = ref(0.3)
-const sameMvList = ref([])
-const singerMv = ref([])
+const sameMvList: any = ref([])
+const singerMv: any = ref([])
 const videoPlayerCom = ref()
 const mvLoading = ref(false)
 const loading = ref(false)

@@ -112,7 +112,7 @@ import { formatDate } from '@/utils/utils'
 
 const nowDate = new Date()
 const curDate = ref(nowDate)
-const curDateInfo = ref({})
+const curDateInfo: any = ref({})
 const monthInfo = ref([])
 
 const calendar = ref()

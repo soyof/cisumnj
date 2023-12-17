@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * @name: 43236
  * @description: 创建任意长度的数组,数组内容为当前下标值
@@ -239,7 +240,7 @@ const jsonToUnderline = (obj: any): any => {
     obj = JSON.parse(JSON.stringify(obj))
   }
   if (objType === 'array') {
-    obj = obj.map(item => {
+    obj = obj.map((item: any) => {
       if (getValueType(item) === 'array' || getValueType(item) === 'object') {
         item = jsonToUnderline(item)
       }
@@ -307,7 +308,7 @@ export const scrollIntoView = (container: HTMLElement, selected: HTMLElement) =>
   }
 
   const offsetParents = []
-  let pointer = selected.offsetParent
+  let pointer: any = selected.offsetParent
   while (pointer && container !== pointer && container.contains(pointer)) {
     offsetParents.push(pointer)
     pointer = pointer.offsetParent
