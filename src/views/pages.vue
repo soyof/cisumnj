@@ -8,44 +8,42 @@
         <el-calendar ref="calendar" v-model="curDate" class="pages-el-calendar">
           <template #header="{ date }">
             <div class="calendar-header-date">
-              日期： <i class="calendar-header-date-txt mr10">{{ curDateInfo.date_cn || date }}</i>
-              <template v-if="!isCurDay">
-                <span v-if="curDateInfo.lunar_date_cn" class="fz16">
-                  农历： <i class="calendar-header-date-txt">{{ curDateInfo.lunar_date_cn || '--' }}</i>
-                </span>
-                <span>
-                  <span class="ml10">{{ curDateInfo.yearweek_cn }}</span>
-                  <span v-if="curDateInfo.yearday" class="ml10">第{{ curDateInfo.yearday }}天</span>
-                </span>
-                <!-- 节日 -->
-                <el-tag
-                  v-if="isShowHolidayName(curDateInfo)"
-                  size="small"
-                  class="tag-item ml10"
-                  effect="dark"
-                  type=""
-                >
-                  {{ curDateInfo.holiday_or_cn }}
-                </el-tag>
-                <!-- 是否工作日 -->
-                <el-tag
-                  v-if="curDateInfo.workday_cn"
-                  size="small"
-                  class="tag-item"
-                  :type="curDateInfo.workday === 1 ? 'danger' : ''"
-                >
-                  {{ curDateInfo.workday_cn || '工作日' }}
-                </el-tag>
-                <el-button
-                  v-if="curDateInfo.holiday_recess && curDateInfo.holiday_recess !== 2"
-                  class="holiday-content-btn ml10"
-                  size="small"
-                  type="primary"
-                  circle
-                >
-                  假
-                </el-button>
-              </template>
+              日期： <i class="calendar-header-date-txt mr10">{{ curDateInfo.date || date }}</i>
+              <span v-if="curDateInfo.lunarCalendar" class="fz16">
+                农历： <i class="calendar-header-date-txt">{{ curDateInfo.lunarCalendar || '--' }}</i>
+              </span>
+              <span>
+                <span class="ml10">第{{ curDateInfo.weekOfYear }}周</span>
+                <span v-if="curDateInfo.dayOfYear" class="ml10">第{{ curDateInfo.dayOfYear }}天</span>
+              </span>
+              <!-- 节日 -->
+              <el-tag
+                v-if="isShowHolidayName(curDateInfo)"
+                size="small"
+                class="tag-item ml10"
+                effect="dark"
+                type=""
+              >
+                {{ curDateInfo.typeDes }}
+              </el-tag>
+              <!-- 是否工作日 -->
+              <el-tag
+                v-if="curDateInfo.workday_cn"
+                size="small"
+                class="tag-item"
+                :type="curDateInfo.workday === 1 ? 'danger' : ''"
+              >
+                {{ curDateInfo.workday_cn || '工作日' }}
+              </el-tag>
+              <el-button
+                v-if="curDateInfo.holiday_recess && curDateInfo.holiday_recess !== 2"
+                class="holiday-content-btn ml10"
+                size="small"
+                type="primary"
+                circle
+              >
+                假
+              </el-button>
             </div>
             <el-button-group>
               <el-button size="small" @click="selectDate('prev-year')">
@@ -74,7 +72,7 @@
                 <div class="calender-item-date">
                   <span>{{ dateInfo(data.day).day }}</span>
                   <el-button
-                    v-if="dateInfo(data.day).holiday_recess && dateInfo(data.day).holiday_recess !== 2"
+                    v-if="dateInfo(data.day).type && dateInfo(data.day).type === 2"
                     class="holiday-content-btn"
                     size="small"
                     type="primary"
@@ -84,14 +82,19 @@
                   </el-button>
                 </div>
                 <p class="ellipsis fs12 lunar">
-                  {{ dateInfo(data.day).lunar_date_cn }}
+                  {{ dateInfo(data.day).lunarCalendar }}
                 </p>
-                <div v-if="dateInfo(data.day) && dateInfo(data.day).workday_cn" class="holiday-content-tag-box">
-                  <el-tag class="holiday-content-tag" :type="dateInfo(data.day).workday === 1 ? 'danger' : ''">
-                    {{ dateInfo(data.day).workday_cn || '工作日' }}
+                <div v-if="dateInfo(data.day)" class="holiday-content-tag-box">
+                  <el-tag
+                    v-if="dateInfo(data.day).typeDes"
+                    class="holiday-content-tag"
+                    effect="dark"
+                    :type="dateInfo(data.day).type === 0 ? 'danger' : ''"
+                  >
+                    {{ dateInfo(data.day).typeDes }}
                   </el-tag>
-                  <el-tag v-if="isShowHolidayName(dateInfo(data.day))" class="holiday-content-tag" effect="dark">
-                    {{ dateInfo(data.day).holiday_or_cn || 'NON' }}
+                  <el-tag v-if="dateInfo(data.day).solarTerms" class="holiday-content-tag">
+                    {{ dateInfo(data.day).solarTerms }}
                   </el-tag>
                 </div>
               </div>
@@ -105,6 +108,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, computed } from 'vue'
+import { ROLL_TOOLS_APP_ID, ROLL_TOOLS_APP_SECRET } from '@/dic'
 import CurrentDate from '@/components/currentDate.vue'
 
 import http from '@/plugins/axios'
@@ -113,7 +117,7 @@ import { formatDate } from '@/utils/utils'
 const nowDate = new Date()
 const curDate = ref(nowDate)
 const curDateInfo: any = ref({})
-const monthInfo = ref([])
+const monthInfo: any = ref([])
 
 const calendar = ref()
 const selectDate = (val: string) => {
@@ -131,45 +135,45 @@ watch(curDate, (newVal, oldVal) => {
   if ((newYear !== oldYear || newMonth !== oldMonth) && !isExist) {
     getCurMonthInfo()
   }
-  getDateInfo()
+  setTimeout(() => {
+    getDateInfo()
+  }, 1500)
 })
 
 const dateInfo = computed(() => {
   return (date: any) => {
-    const fmDate = date.replace(/-/g, '')
     const day = date.split('-')[2]
-
-    const info: any = monthInfo.value.find((item: any) => item.date === +fmDate) || {}
+    const info: any = monthInfo.value.find((item: any) => item.date === formatDate(date, 'yyyy-MM-dd')) || {}
     return { ...info, day: day } || { day }
   }
 })
 
 const isShowHolidayName = computed(() => {
   return (dateInfo: any) => {
-    const { holiday_or, holiday, holiday_today } = dateInfo
-    return holiday_or && holiday && holiday_today && (holiday_or !== 10 && holiday !== holiday_or) || holiday_today === 1
+    const { type } = dateInfo
+    return type === 2
   }
 })
 
-const isCurDay = computed(() => {
-  const curDay = formatDate(nowDate, 'dd')
-  const curChooseDay = formatDate(curDate.value, 'dd')
-  return curDay === curChooseDay
-})
+// const isCurDay = computed(() => {
+//   const curDay = formatDate(nowDate, 'dd')
+//   const curChooseDay = formatDate(curDate.value, 'dd')
+//   return curDay === curChooseDay
+// })
 
 // 获取当前月份相关信息
 const getCurMonthInfo = async() => {
-  const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
-    cn: '1',
-    size: '31',
-    order_by: 1,
-    year: formatDate(curDate.value, 'yyyy'),
-    month: formatDate(curDate.value, 'yyyyMM')
+  const result: any = await http.get(`https://www.mxnzp.com/api/holiday/list/month/${formatDate(curDate.value, 'yyyyMM')}`, {
+    ignoreHoliday: false,
+    app_id: ROLL_TOOLS_APP_ID,
+    app_secret: ROLL_TOOLS_APP_SECRET
   })
-  if (result && result.data && result.data.list) {
+  console.log(result)
+
+  if (result && result.data) {
     monthInfo.value = [
       ...monthInfo.value,
-      ...result.data.list
+      ...result.data
     ]
   }
 }
@@ -178,25 +182,30 @@ const getDateInfo = async() => {
   const newYM = +formatDate(curDate.value, 'yyyyMMdd')
   const curItemIds: number = monthInfo.value.findIndex((item: any) => item.date === newYM)
   const curItem: any = monthInfo.value.find((item: any) => item.date === newYM)
-  if (curItemIds >= 0) {
+  console.log(curItemIds, 123)
+  if (curItemIds > -1) {
     curDateInfo.value = {
       ...curItem
     }
   } else {
-    const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
-      cn: '1',
-      size: '31',
-      date: formatDate(curDate.value, 'yyyyMMdd')
+    const result: any = await http.get(`https://www.mxnzp.com/api/holiday/single/${formatDate(curDate.value, 'yyyyMMdd')}`, {
+      ignoreHoliday: false,
+      app_id: ROLL_TOOLS_APP_ID,
+      app_secret: ROLL_TOOLS_APP_SECRET
     })
     if (result && result.data) {
       curDateInfo.value = {
-        ...result.data.list[0]
+        ...result.data
       }
     }
   }
 }
-getDateInfo()
-getCurMonthInfo()
+setTimeout(() => {
+  getDateInfo()
+}, 1500)
+setTimeout(() => {
+  getCurMonthInfo()
+}, 3000)
 
 </script>
 
@@ -277,9 +286,16 @@ getCurMonthInfo()
             background-color: #13c2c2 !important;
           }
 
+          &.is-today .actives {
+            color: #fff;
+          }
+
           &.is-selected {
             color: #fff;
             background-color: #40a9ff !important;
+            .actives {
+              color: #fff;
+            }
           }
         }
 

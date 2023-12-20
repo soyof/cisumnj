@@ -1,6 +1,7 @@
 import { ref, onBeforeUnmount, computed } from 'vue'
 import http from '@/plugins/axios'
 import { formatDate } from '@/utils/utils'
+import { ROLL_TOOLS_APP_ID, ROLL_TOOLS_APP_SECRET } from '@/dic'
 
 const getNowTimes = () => {
   const year = formatDate(new Date(), 'yyyy')
@@ -68,20 +69,20 @@ export const useNowDate = () => {
 
   // 获取当前选中日期信息
   const getDateInfo = async() => {
-    const result: any = await http.get('https://api.apihubs.cn/holiday/get', {
-      cn: '1',
-      size: '31',
-      date: formatDate(new Date(), 'yyyymmdd')
+    const result: any = await http.get(`https://www.mxnzp.com/api/holiday/single/${formatDate(new Date(), 'yyyyMMdd')}`, {
+      ignoreHoliday: false,
+      app_id: ROLL_TOOLS_APP_ID,
+      app_secret: ROLL_TOOLS_APP_SECRET
     })
-    curDateInfo.value = result.data.list[0]
+    curDateInfo.value = result.data
   }
 
   getDateInfo()
 
   const isShowHolidayName = computed(() => {
     return (dateInfo: any) => {
-      const { holiday_or, holiday, holiday_today } = dateInfo
-      return holiday_or && holiday && holiday_today && (holiday_or !== 10 && holiday !== holiday_or) || holiday_today === 1
+      const { type } = dateInfo
+      return type === 2
     }
   })
 

@@ -25,15 +25,15 @@
           {{ `${curYear}年${curMonth}月${curDay}日` }}
         </div>
         <div class="lunar-calendar-box other-info-item">
-          {{ curDateInfo.lunar_date_cn }}
+          {{ curDateInfo.lunarCalendar }}
         </div>
       </div>
       <div class="week-day-info">
         <div class="week-for-year mb10">
-          {{ curDateInfo.yearweek_cn }}
+          第{{ curDateInfo.weekOfYear }}周
         </div>
         <div class="day-for-year">
-          {{ curDateInfo.yearday_cn }}
+          第{{ curDateInfo.dayOfYear }}天
         </div>
       </div>
       <div class="other-info">
@@ -44,19 +44,19 @@
           class="mb10 ellipsis"
           effect="dark"
         >
-          {{ curDateInfo.holiday_or_cn }}
+          {{ curDateInfo.typeDes }}
         </el-tag>
         <!-- 是否工作日 -->
         <el-tag
-          v-if="curDateInfo.workday_cn"
+          v-if="curDateInfo.type === 0"
           size="small"
           class="mb10 ellipsis"
-          :type="curDateInfo.workday === 1 ? 'danger' : ''"
+          :type="curDateInfo.type === 0 ? 'danger' : ''"
         >
-          {{ curDateInfo.workday_cn || '工作日' }}
+          {{ curDateInfo.typeDes || '工作日' }}
         </el-tag>
         <el-button
-          v-if="curDateInfo.holiday_recess && curDateInfo.holiday_recess !== 2"
+          v-if="curDateInfo.type && curDateInfo.type === 2"
           class="holiday-content-btn"
           size="small"
           type="primary"
