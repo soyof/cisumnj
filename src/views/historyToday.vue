@@ -4,6 +4,7 @@
       v-for="(item, ids) in historyTodayList"
       :key="`${ids}-history-today`"
       :title="item.title"
+      :show="ids === 0"
     >
       <template #headerBefore>
         <div class="history-today-times">
@@ -47,7 +48,7 @@ getHistoryTodayInfo()
 <style lang="less" scoped>
 .history-today-wrap {
   padding: 16px;
-  /deep/ .self-collapse {
+  :deep(.self-collapse)  {
     width: 100%;
     .self-collapse-header {
       .self-collapse-header-title-text {
