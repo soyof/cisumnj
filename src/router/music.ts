@@ -96,12 +96,12 @@ export default [
     component: () => import(/* webpackChunkName: "imgList" */ '@/views/imgList.vue')
   },
   {
-    path: 'lotteryInfo',
-    title: '彩票信息',
+    name: 'lotteryTypeInfo',
+    path: 'lotteryTypeInfo',
+    title: '彩票类型',
     meta: {
       hidden: false
     },
-    name: 'lotteryInfo',
-    component: () => import(/* webpackChunkName: "lotteryInfo" */ '@/views/lotteryInfo.vue')
+    component: () => import(/* webpackChunkName: "lotteryInfo" */ '@/views/lotteryInfo/lotteryTypeInfo.vue')
   }
 ]
