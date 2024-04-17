@@ -94,5 +94,14 @@ export default [
     },
     name: 'imgList',
     component: () => import(/* webpackChunkName: "imgList" */ '@/views/imgList.vue')
+  },
+  {
+    path: 'lotteryInfo',
+    title: '彩票信息',
+    meta: {
+      hidden: false
+    },
+    name: 'lotteryInfo',
+    component: () => import(/* webpackChunkName: "lotteryInfo" */ '@/views/lotteryInfo.vue')
   }
 ]
