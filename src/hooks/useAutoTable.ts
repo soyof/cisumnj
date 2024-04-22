@@ -1,7 +1,9 @@
 import { onMounted, onUnmounted, ref, nextTick } from 'vue'
 
-export const useAutoTable = () => {
+export const useAutoTable = (diffVal = 0) => {
+  diffVal = diffVal || 0
   const headerDom: any = ref(null)
+
   const paginationDom: any = ref(null)
   const tableHeight: any = ref('calc(100vh - 160px)')
   const handleRegisterEvent = () => {
@@ -27,7 +29,7 @@ export const useAutoTable = () => {
     }
 
     if (pageHeight) {
-      const height = Math.floor(pageHeight - headerHeight - paginationHeight - 50 - 28)
+      const height = Math.floor(pageHeight - headerHeight - paginationHeight - 50 - 28 - diffVal)
       tableHeight.value = height > 100 ? height : 100
     } else {
       tableHeight.value = 'calc(100vh - 160px)'

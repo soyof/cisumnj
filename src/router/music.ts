@@ -103,5 +103,14 @@ export default [
       hidden: false
     },
     component: () => import(/* webpackChunkName: "lotteryInfo" */ '@/views/lotteryInfo/lotteryTypeInfo.vue')
+  },
+  {
+    name: 'lotteryWinInfo',
+    path: 'lotteryWinInfo',
+    title: '彩票中奖信息',
+    meta: {
+      hidden: false
+    },
+    component: () => import(/* webpackChunkName: "lotteryInfo" */ '@/views/lotteryInfo/lotteryWinInfo.vue')
   }
 ]
