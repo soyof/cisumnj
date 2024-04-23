@@ -1,21 +1,30 @@
 # cisumnj
 
-## Project
+## Description
+Music management platform
+> Integrated music playback, MV, recent charts, music search, popular playlists, etc
+
+## Deploy
+```js
+npm install
+
+npm run build
+```
+
+## Local startup
 ```js
 // setup
 npm install
 // Compiles and hot-reloads for development
 npm run serve
-// Compiles and minifies for production
-npm run build
-// Lints and fixes files
-npm run lint
 ```
 
-### 
-### 
+## Environmental requirements
+> Nodejs 14+
+
+## Interface
+[NetEase Cloud Music](https://binaryify.github.io/NeteaseCloudMusicApi/#/?id=neteasecloudmusicapi)
 
 
-### 
 
 
