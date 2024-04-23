@@ -16,7 +16,7 @@
       </el-select>
     </div>
     <el-table :max-height="tableHeight" :data="lotteryInfoList" style="width: 100%">
-      <el-table-column prop="expect" label="期数" />
+      <el-table-column prop="expect" label="彩票期号" />
       <el-table-column prop="openCode" label="中奖号码" />
       <el-table-column prop="time" label="开奖时间" />
       <el-table-column prop="name" label="类型" />

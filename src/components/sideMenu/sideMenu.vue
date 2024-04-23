@@ -14,7 +14,8 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
 import SideMenuItem from './sideMenuItem.vue'
-import routers from '@/router/music'
+import musicRouters from '@/router/music'
+import otherRouters from '@/router/other'
 
 @Options({
   components: {
@@ -33,7 +34,7 @@ import routers from '@/router/music'
     }
   },
   created() {
-    const routersList = this.handleFilterHiddenMenu(routers)
+    const routersList = this.handleFilterHiddenMenu([...musicRouters, ...otherRouters])
     this.routers = this.handleRouterPath(routersList, this.routePrefix)
   },
   mounted() {

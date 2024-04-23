@@ -83,4 +83,13 @@ export default class SideMenuItem extends Vue {}
 </script>
 
 <style lang="less" scoped>
+.el-sub-menu {
+  :deep(.el-sub-menu__title) {
+    height: 36px !important;
+  }
+  :deep(.el-menu-item-group__title) {
+    padding: 0;
+  }
+}
+
 </style>

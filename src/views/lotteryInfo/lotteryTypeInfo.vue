@@ -24,7 +24,6 @@ const getLotteryTypeInfo = () => {
     app_secret: ROLL_TOOLS_APP_SECRET,
     code: 'ssq'
   }).then((res: any) => {
-    console.log(res)
     lotteryTypes.value = res.data || []
   }).finally(() => {
     loading.value = false
