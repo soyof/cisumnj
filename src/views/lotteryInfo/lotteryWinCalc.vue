@@ -36,6 +36,19 @@
         </el-button>
       </el-form-item>
     </el-form>
+    <el-card v-if="Object.keys(lotteryInfos).length > 0">
+      <template #header>
+        <div class="card-header">
+          <span>{{ lotteryInfos.codeValue }}</span>
+        </div>
+      </template>
+      <p>彩票期号：{{ lotteryInfos.expect }}</p>
+      <p>彩票号码：{{ lotteryInfos.openCode }}</p>
+      <p>是否中奖：{{ lotteryInfos.resultDetails }}</p>
+      <template #footer>
+        Footer content
+      </template>
+    </el-card>
   </div>
 </template>
 
@@ -96,6 +109,8 @@ const formLotteryNum = computed(() => {
   return new Array(numInfo[formInfo.code])
 })
 
+const lotteryInfos = ref({})
+
 const handleCodeChange = () => {
   formInfo.lotteryNo1 = ''
   formInfo.lotteryNo2 = ''
@@ -129,7 +144,6 @@ const getLotteryNo = (type: any, info: any) => {
 }
 
 const handleCalcWinInfo = () => {
-  console.log(formInfo)
   const lotteryNo = getLotteryNo(formInfo.code, formInfo)
 
   loading.value = true
@@ -140,7 +154,7 @@ const handleCalcWinInfo = () => {
     lotteryNo
   }).then((res: any) => {
     console.log(res)
-    // lotteryTypes.value = res.data || []
+    lotteryInfos.value = res.data || {}
   }).finally(() => {
     loading.value = false
   })
